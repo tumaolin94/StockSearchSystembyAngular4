@@ -1,0 +1,15 @@
+.searchHeader {
+    text-align: center;
+}
+.symbolLabel{
+    color:red;
+}
+.searchContainer {
+    margin-top :4%;
+    background-color: white;
+    padding-bottom :1%;
+}
+
+body {
+    background-color: #000000 !important;
+}
