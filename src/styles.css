@@ -14,3 +14,4 @@
 body {
   background-color: #000000 !important;
 }
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
