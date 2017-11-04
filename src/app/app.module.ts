@@ -6,6 +6,10 @@ import { MatFormFieldModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
 import {MatAutocompleteModule} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpModule } from '@angular/http';
+import {JsonpModule, Jsonp, Response} from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,6 +22,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatAutocompleteModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    HttpModule,
+    JsonpModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

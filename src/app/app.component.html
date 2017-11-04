@@ -9,8 +9,8 @@
         <div class="col-md-6">
           <div class="form-group" [ngClass]="{ 'has-error' : symbol.touched && symbol.invalid}">
               <input class="form-control" id="symbol" name="symbol" placeholder="e.g. AAPL"
-                     [(ngModel)]="symbol_text"
-                     formControlName="symbol"  required   [matAutocomplete]="auto">
+                     [(ngModel)]="symbol_text" #searchBox
+                     formControlName="symbol"  required   [matAutocomplete]="auto" (keyup)="search(searchBox.value)">
           </div>
 
         </div>
@@ -39,9 +39,10 @@
     <p>Name控件的touched状态：{{symbol.touched}} - 表示控件已被访问过</p>
     <p>Name控件的untouched状态：{{symbol.untouched}} - 表示控件未被访问过</p>
     <p>{{smybol_text}}</p>
+
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
-        <span>{{ state.name }}</span> |
+      <mat-option *ngFor="let data of autodatas | async" [value]="data.Name">
+        <span>{{data.Symbol}} - {{ data.Name }} ({{data.Exchange}})</span>
       </mat-option>
     </mat-autocomplete>
   </div>

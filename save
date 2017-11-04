@@ -1,0 +1,51 @@
+import { Component } from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgForm} from '@angular/forms';
+import {Observable} from 'rxjs/Observable';
+import { OnInit } from '@angular/core';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/map';
+import { Jsonp, Headers, Http, Response} from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import {Autodata} from './autoData';
+import { SearchService } from './search.service';
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  providers: [SearchService]
+})
+export class AppComponent {
+  private headers = new Headers({'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin' : '*'});
+  symbol_text;
+  form = new FormGroup({
+    symbol: new FormControl('', [
+      Validators.required,
+    ]),
+  });
+  get symbol(): any { return this.form.get('symbol'); }
+  autodatas: Observable<Autodata[]>;
+  testData: Autodata[] = [] ;
+  constructor(private http: HttpClient) {
+     private searchService: SearchService;
+  }
+
+  onClick() {
+    console.log('Click');
+  }
+  search(term: string): Observable<Autodata[]> {
+    console.log(term);
+    this.http.get('http://localhost:3000/auto?input=aa').subscribe(data => {
+      // Read the result field from the JSON response.
+      console.log(data[0]);
+      this.testData.push(data[0]);
+      console.log(this.testData);
+    });
+    return this.http
+      .get(`http://localhost:3000/auto?input=aa`)
+      .map(data => data as Autodata[]);
+
+  }
+
+}
