@@ -15,13 +15,16 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
+
+import { StockDetailComponent } from './stock.detail';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [SearchService]
+  providers: [SearchService, StockDetailComponent]
 })
 export class AppComponent implements OnInit {
+  symbol_value: String;
   private headers = new Headers({'Content-Type': 'application/json',
     'Access-Control-Allow-Origin' : '*'});
   symbol_text;
@@ -34,7 +37,7 @@ export class AppComponent implements OnInit {
   autodatas: Observable<Autodata[]>;
   testData: Autodata[] = [] ;
   private searchTerms = new Subject<string>();
-  constructor(private http: HttpClient, private searchService: SearchService) {
+  constructor(private http: HttpClient, private searchService: SearchService, private stockdetail: StockDetailComponent) {
   }
 
   search(term: string): void {
@@ -54,6 +57,12 @@ export class AppComponent implements OnInit {
         console.log(error);
         return Observable.of<Autodata[]>([]);
       });
+  }
+
+  onSubmit(value: string): void {
+    console.log(value);
+    this.symbol_value = value;
+    // this.stockdetail.test(value);
   }
 
 

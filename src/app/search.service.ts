@@ -20,12 +20,12 @@ export class SearchService {
     console.log(term);
     const url = `http://localhost:3000/auto?input=` + term ;
     console.log(url);
-    this.http.get(url).subscribe(data => {
-      // Read the result field from the JSON response.
-      console.log(data[0]);
-      // this.testData.push(data[0]);
-      // console.log(this.testData);
-    });
+    // this.http.get(url).subscribe(data => {
+    //   // Read the result field from the JSON response.
+    //   console.log(data[0]);
+    //   // this.testData.push(data[0]);
+    //   // console.log(this.testData);
+    // });
     return this.httpc
       .get(url)
       .map(data => data as Autodata[]);

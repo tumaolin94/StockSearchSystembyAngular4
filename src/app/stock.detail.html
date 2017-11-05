@@ -1,0 +1,117 @@
+<div class=" well container">
+  <div id="myCarousel" class="carousel slide ">
+    <!-- Carousel items -->
+    <div class="carousel-inner">
+      <!--details-->
+      <div class="item active">
+        <div class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-3 col-md-3 ">
+                <button href="#myCarousel" data-slide="prev" style="margin: 0% "
+                        class="btn-responsive"><i
+                  class=" glyphicon glyphicon-chevron-left btn "></i></button>
+
+              </div>
+              <div class="col-xs-7 col-md-6 col-md-offset-right-3 text-center">
+                <b style="margin-left: 2%">Stock Details</b>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Stock Detail-->
+        <div class="container">
+          <div id="content">
+            <ul id="tabs" class="nav nav-pills" data-tabs="tabs">
+              <li class="active stockClass"><a href="#stockDetails" data-toggle="tab"><i
+                class="glyphicon glyphicon-dashboard"> </i> <span
+                class="ScreenHide">Current</span> Stock</a></li>
+              <li class="chartClass"><a href="#interactiveChart" data-toggle="tab"><i
+                class="glyphicon glyphicon-stats" id="highStocks"> </i> <span
+                class="ScreenHide">Historical</span>
+                Charts</a></li>
+              <li id="feedTab" class="feedClass"><a href="#newsFeeds" data-toggle="tab"><i
+                class="glyphicon glyphicon-link"> </i> <span class="ScreenHide">News</span>
+                Feeds</a></li>
+
+            </ul>
+            <hr>
+            <div id="my-tab-content" class="tab-content">
+              <div class="tab-pane active" id="stockDetails">
+                <div class="row">
+                  <div class="col-md-2 col-sm-4 col-xs-6">
+                    <b>Stock Details</b>
+                  </div>
+                  <div class="col-md-2  ">
+                    <button style="width: 30px ;height:30px" id="starBat"><i
+                      class="glyphicon glyphicon-star-empty"
+                      id="starElement"></i></button>
+                    <a href="#"><img
+                      src="https://www.sentinelsystems.ca/uploads/images/Buttons/FB_button.png"
+                      style="width: 30px ;height:30px" id="fbData"></a>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 col-xs-14">
+                    <div style="width: 100%" class="container">
+                      <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                          <th>Stock Ticker Symol</th>
+                          <td>{{symbol_info.symbol}}</td>
+                        </tr>
+                        <tr>
+                          <th>Last Price</th>
+                          <td>{{symbol_info.close}}</td>
+                        </tr>
+                        <tr>
+                          <th>Change(Change Percent)</th>
+                          <td *ngIf="symbol_info.change >= 0">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Green_Arrow_Up.png' alt='up' width='15' height='15'></td>
+                          <td *ngIf="symbol_info.change < 0">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Red_Arrow_Down.png' alt='up' width='15' height='15'></td>
+                        </tr>
+                        <tr>
+                          <th>Timestamp</th>
+                          <td>{{symbol_info.timestamp}}</td>
+                        </tr>
+                        <tr>
+                          <th>Open</th>
+                          <td>{{symbol_info.open}}</td>
+                        </tr>
+                        <tr>
+                          <th>Close</th>
+                          <td>{{symbol_info.close}}</td>
+                        </tr>
+                        <tr>
+                          <th>Day's Range</th>
+                          <td>{{symbol_info.range}}</td>
+                        </tr>
+                        <tr>
+                          <th>Volume</th>
+                          <td>{{symbol_info.volume}}</td>
+                        </tr>
+                        </tbody>
+                      </table>
+
+
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="container-fluid">
+
+                      <div class="row" id="stockImage">
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
