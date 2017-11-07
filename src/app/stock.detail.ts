@@ -16,6 +16,8 @@ import 'rxjs/add/operator/toPromise';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/timer';
 import { SimpleChanges, OnChanges } from '@angular/core';
+import {StockData} from './stockData';
+
 @Component({
   selector: 'stock-detail',
   templateUrl: './stock.detail.html',
@@ -29,6 +31,7 @@ export class StockDetailComponent implements OnChanges {
   chart;
   smachart;
   options: Object;
+  highStockoptions: Object;
   smaOptions: Object;
   newsfeeds: Newsfeed[] = [];
   ops: Object[] = [];
@@ -75,6 +78,7 @@ export class StockDetailComponent implements OnChanges {
     this.testNews(this.symbol);
 
   }
+
   // getOption(indicator: String): Object {
   //   return this.smaOptions;
   // }
@@ -516,6 +520,7 @@ export class StockDetailComponent implements OnChanges {
       let date: string[] = [];
       let price_array: number[] = [];
       let volume_array: number[] = [];
+      let timestampData = [];
       for (let key in array_values) {
         // console.log(key);
           if (count === 0) {
@@ -533,20 +538,28 @@ export class StockDetailComponent implements OnChanges {
         if (temp_date.length > 5) {
           temp_date = temp_date.substr(0, 5 );
         }
-        date.push(temp_date);
-        price_array.push(parseFloat(array_values[key]['4. close']));
-        volume_array.push(parseFloat(array_values[key]['5. volume']));
-        max = Math.max(parseFloat(array_values[key]['4. close']), max);
-        min = Math.min(parseFloat(array_values[key]['4. close']), min);
-        volume_max = Math.max(parseFloat(array_values[key]['5. volume']), volume_max);
-        if (count === 126) {
-          break;
+        // date.push(temp_date);
+        // price_array.push(parseFloat(array_values[key]['4. close']));
+        // volume_array.push(parseFloat(array_values[key]['5. volume']));
+        // max = Math.max(parseFloat(array_values[key]['4. close']), max);
+        // min = Math.min(parseFloat(array_values[key]['4. close']), min);
+        // volume_max = Math.max(parseFloat(array_values[key]['5. volume']), volume_max);
+        timestampData.push([new Date(key).getTime(), parseFloat(array_values[key]['4. close'])]);
+        if (count < 126) {
+          // break;
+          date.push(temp_date);
+          price_array.push(parseFloat(array_values[key]['4. close']));
+          volume_array.push(parseFloat(array_values[key]['5. volume']));
+          max = Math.max(parseFloat(array_values[key]['4. close']), max);
+          min = Math.min(parseFloat(array_values[key]['4. close']), min);
+          volume_max = Math.max(parseFloat(array_values[key]['5. volume']), volume_max);
         }
           count++;
       }
       price_array.reverse();
       volume_array.reverse();
       date.reverse();
+      timestampData.reverse();
       low = parseFloat(low).toFixed(2);
       high = parseFloat(high).toFixed(2);
       this.symbol_info.open = parseFloat(open).toFixed(2);
@@ -628,6 +641,22 @@ export class StockDetailComponent implements OnChanges {
       // this.chart.series[1].setData(this.symbol_info.volume_array);
       // this.testData.push(data[0]);
       // console.log(this.testData);
+        console.log('stock_date');
+        console.log((timestampData));
+        this.highStockoptions = {
+          chart: {
+            zoomType: 'x'
+          },
+        title : { text : value + 'Stock Value' },
+        series : [{
+          name : value + 'Stock Value',
+          type: 'area',
+          data : timestampData,
+          tooltip: {
+            valueDecimals: 2
+          }
+        }]
+      }
         this.price_tag = true;
     },
       err => {
