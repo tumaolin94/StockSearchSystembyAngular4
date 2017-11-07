@@ -65,6 +65,7 @@ export class AppComponent implements OnInit {
     console.log(value);
     this.symbol_value = value;
     this.fake_count++;
+    this.stockdetail.price_tag = false;
     // this.stockdetail.test(value);
   }
 

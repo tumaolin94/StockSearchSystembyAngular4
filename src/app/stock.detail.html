@@ -25,7 +25,7 @@
               <li class="active stockClass"><a href="#stockDetails" data-toggle="tab"><i
                 class="glyphicon glyphicon-dashboard"> </i> <span
                 class="ScreenHide">Current</span> Stock</a></li>
-              <li class="chartClass"><a href="#interactiveChart" data-toggle="tab"><i
+              <li class="chartClass"><a href="#HistoryChart" data-toggle="tab"><i
                 class="glyphicon glyphicon-stats" id="highStocks"> </i> <span
                 class="ScreenHide">Historical</span>
                 Charts</a></li>
@@ -68,7 +68,10 @@
                         </div>
                       </div>
                     </div>
-                    <div style="width: 100%; padding-right: 0;padding-left: 0;" class="container">
+                    <div *ngIf="!price_tag" class="progress">
+                      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                    </div>
+                    <div *ngIf="price_tag" style="width: 100%; padding-right: 0;padding-left: 0;" class="container">
                       <table class="table table-striped">
                         <tbody>
                         <tr>
@@ -81,8 +84,8 @@
                         </tr>
                         <tr>
                           <th>Change(Change Percent)</th>
-                          <td *ngIf="symbol_info.change >= 0">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Green_Arrow_Up.png' alt='up' width='15' height='15'></td>
-                          <td *ngIf="symbol_info.change < 0">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Red_Arrow_Down.png' alt='up' width='15' height='15'></td>
+                          <td *ngIf="symbol_info.change >= 0" style="color: green">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Green_Arrow_Up.png' alt='up' width='15' height='15'></td>
+                          <td *ngIf="symbol_info.change < 0" style="color: red">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Red_Arrow_Down.png' alt='up' width='15' height='15'></td>
                         </tr>
                         <tr>
                           <th>Timestamp</th>
@@ -126,64 +129,105 @@
                     </div>
                     <div class="tab-content">
                       <div id="chart_price" class="tab-pane fade in active">
-                        <div class="progress">
+                        <div *ngIf="!price_tag" class="progress">
                           <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
                         </div>
-                        <div class="detail_wrapper">
+                        <div *ngIf="price_tag" class="detail_wrapper" >
                           <chart  [options]="options">
                           </chart>
                         </div>
                       </div>
                       <div id="indicator_SMA" class="tab-pane fade">
-                        <div class="detail_wrapper">
+                        <div *ngIf="!tags[0]" class="progress">
+                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                        </div>
+                        <div class="detail_wrapper" *ngIf="tags[0]">
                           <chart  [options]="ops[0]" (load)="saveChart($event.context)">
                           </chart>
                         </div>
                       </div>
                       <div id="indicator_EMA" class="tab-pane fade">
-                        <div class="detail_wrapper">
+                        <div *ngIf="!tags[1]" class="progress">
+                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                        </div>
+                        <div *ngIf="tags[1]" class="detail_wrapper">
                           <chart  [options]="ops[1]" >
                           </chart>
                         </div>
                       </div>
                       <div id="indicator_STOCH" class="tab-pane fade">
-                        <div class="detail_wrapper">
+                        <div *ngIf="!tags[2]" class="progress">
+                          <div  class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                        </div>
+                        <div *ngIf="tags[2]" class="detail_wrapper">
                           <chart  [options]="ops[2]" >
                           </chart>
                         </div>
                       </div>
                       <div id="indicator_RSI" class="tab-pane fade">
-                        <div class="detail_wrapper">
+                        <div *ngIf="!tags[3]" class="progress">
+                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                        </div>
+                        <div *ngIf="tags[3]" class="detail_wrapper">
                           <chart  [options]="ops[3]" >
                           </chart>
                         </div>
                       </div>
                       <div id="indicator_ADX" class="tab-pane fade">
-                        <div class="detail_wrapper">
+                        <div *ngIf="!tags[4]" class="progress">
+                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                        </div>
+                        <div *ngIf="tags[4]"  class="detail_wrapper">
                           <chart  [options]="ops[4]" >
                           </chart>
                         </div>
                       </div>
                       <div id="indicator_CCI" class="tab-pane fade">
-                        <div class="detail_wrapper">
+                        <div *ngIf="!tags[5]" class="progress">
+                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                        </div>
+                        <div *ngIf="tags[5]" class="detail_wrapper">
                           <chart  [options]="ops[5]" >
                           </chart>
                         </div>
                       </div>
                       <div id="indicator_BBANDS" class="tab-pane fade">
-                        <div class="detail_wrapper">
+                        <div *ngIf="!tags[6]" class="progress">
+                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                        </div>
+                        <div *ngIf="tags[6]" class="detail_wrapper">
                           <chart  [options]="ops[6]" >
                           </chart>
                         </div>
                       </div>
                       <div id="indicator_MACD" class="tab-pane fade">
-                        <div class="detail_wrapper">
+                        <div *ngIf="!tags[7]" class="progress">
+                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                        </div>
+                        <div *ngIf="tags[7]" class="detail_wrapper">
                           <chart  [options]="ops[7]" >
                           </chart>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div id="newsFeeds" class="tab-pane fade">
+                <div  *ngIf="!news_tag" class="progress">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                </div>
+                <div class="container" *ngFor="let newsfeed of newsfeeds">
+                  <div class ="well" style="width:95% ;background-color: #E9E9E9">
+                  <div style="margin-bottom:2%"><a href='{{newsfeed.link}}' target="_blank ">{{newsfeed.title}}</a></div>
+                  <div class="FeedContent" style="margin-bottom:2%"></div>
+                  <div  style="margin-bottom:2%;font-weight:bolder">Author: {{newsfeed.author}}</div>
+                  <div  style="font-weight: bolder">Date: {{newsfeed.date}} EDT</div></div>
+                </div>
+              </div>
+              <div id="HistoryChart" class="tab-pane fade">
+                <div  class="progress">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
                 </div>
               </div>
             </div>

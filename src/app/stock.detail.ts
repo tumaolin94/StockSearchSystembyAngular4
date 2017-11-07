@@ -1,5 +1,6 @@
 import { Component, Input, Output} from '@angular/core';
 import {SymbolInfo} from './symbolInfo';
+import {Newsfeed} from './newsfeed';
 import { HttpClient } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
@@ -29,7 +30,11 @@ export class StockDetailComponent implements OnChanges {
   smachart;
   options: Object;
   smaOptions: Object;
+  newsfeeds: Newsfeed[] = [];
   ops: Object[] = [];
+  tags: boolean[] = [];
+  price_tag: boolean ;
+  news_tag: boolean;
   symbol_info: SymbolInfo = new SymbolInfo();
   temp_array: number[] = [];
   constructor(private http: HttpClient ) {
@@ -37,6 +42,11 @@ export class StockDetailComponent implements OnChanges {
     for (let i = 0; i < 10; i++) {
       this.ops.push(new Object());
     }
+    for (let i = 0; i < 10; i++) {
+      this.tags.push(false);
+    }
+    this.price_tag = false;
+    this.news_tag = false;
   }
 
   private searchTerms = new Subject<string>();
@@ -47,27 +57,23 @@ export class StockDetailComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     this.symbol_info = this.test(this.symbol);
     console.log(this.symbol_info.price_array);
-    let timer = Observable.timer(600);
-    timer.subscribe(t => {
-      this.testSMA(0, this.symbol, 'SMA', 1);
-      this.testSMA(1, this.symbol, 'EMA', 1);
-      this.testStOCH(2, this.symbol, 'STOCH', 2);
-    });
-    let timer2 = Observable.timer(300);
-    timer2.subscribe(t => {
-      this.testSMA(3, this.symbol, 'RSI', 1);
-      this.testThree(6, this.symbol, 'BBANDS', 3);
-      this.testThree(7, this.symbol, 'MACD', 3);
-    });
-    // this.testSMA(0, this.symbol, 'SMA', 1);
-    // this.testSMA(1, this.symbol, 'EMA', 1);
-    // this.testStOCH(2, this.symbol, 'STOCH', 2);
-    // this.testSMA(3, this.symbol, 'RSI', 1);
-    this.testSMA(4, this.symbol, 'ADX', 1);
-    this.testSMA(5, this.symbol, 'CCI', 1);
-    // this.testThree(6, this.symbol, 'BBANDS', 3);
-    // this.testThree(7, this.symbol, 'MACD', 3);
-    // this.testIncluding();
+    // let timer = Observable.timer(600);
+    // timer.subscribe(t => {
+    //   this.testSMA(0, this.symbol, 'SMA', 1);
+    //   this.testSMA(1, this.symbol, 'EMA', 1);
+    //   this.testStOCH(2, this.symbol, 'STOCH', 2);
+    // });
+    // let timer2 = Observable.timer(300);
+    // timer2.subscribe(t => {
+    //   this.testSMA(3, this.symbol, 'RSI', 1);
+    //   this.testThree(6, this.symbol, 'BBANDS', 3);
+    //   this.testThree(7, this.symbol, 'MACD', 3);
+    // });
+    //
+    // this.testSMA(4, this.symbol, 'ADX', 1);
+    // this.testSMA(5, this.symbol, 'CCI', 1);
+    this.testNews(this.symbol);
+
   }
   // getOption(indicator: String): Object {
   //   return this.smaOptions;
@@ -78,8 +84,49 @@ export class StockDetailComponent implements OnChanges {
   //     // this.addPoint();
   //
   // }
+  testNews(value: string) {
+    if (value == null) {
+      return ;
+    }
+    value = value.toUpperCase();
+    const url = 'http://localhost:3000/news?symbol=' + value;
+    console.log(url);
+    this.news_tag = false;
+    this.http.get(url).subscribe(data => {
+      this.newsfeeds = [];
+      console.log(data);
+      let array_values = data['rss'];
+     console.log(array_values);
+      let item_values = array_values['channel'][0]['item'];
+      console.log(item_values);
+      let count = 0;
+      for (let key in item_values) {
+        // console.log(item_values[key]['link'][0]);
+        if (item_values[key]['link'][0].includes('article')) {
+          const title = item_values[key]['title'][0];
+          const link = item_values[key]['link'][0];
+          const date = item_values[key]['pubDate'][0].substr(0, item_values[key]['pubDate'][0].length - 6);
+          const author = item_values[key]['sa:author_name'][0];
+          // console.log(item_values[key]['link'][0]);
+          console.log(item_values[key]['title'][0]);
+          // console.log(item_values[key]['pubDate'][0]);
+          // console.log(item_values[key]['pubDate'][0].substr(0, item_values[key]['pubDate'][0].length - 6));
+          // console.log(item_values[key]['sa:author_name'][0]);
+          this.newsfeeds.push((new Newsfeed(title, link, author, date)));
+          count++;
+          if ( count === 5 ) break;
+          // item_values[key]['pubDate'][0]['pubDate'].substr( 0, -6);
+        }
+      }
+      this.news_tag = true;
+    }, err => {
+      console.log(value + ' news');
+      console.log(err);
+    });
+  }
   testThree(option: number, value: string, indicator: string, number: number) {
     console.log(option);
+    this.tags[option] = false;
     if (value == null) {
       return;
     }
@@ -196,6 +243,7 @@ export class StockDetailComponent implements OnChanges {
         //   }, true);
         // }
         // this.addPoint();
+        this.tags[option] = true;
       },
       err => {
         console.log(indicator);
@@ -204,6 +252,7 @@ export class StockDetailComponent implements OnChanges {
   }
   testStOCH(option: number, value: string, indicator: string, number: number) {
     console.log(option);
+    this.tags[option] = false;
     if (value == null) {
       return;
     }
@@ -302,9 +351,7 @@ export class StockDetailComponent implements OnChanges {
             },
           }],
           legend: {
-            layout: 'vertical',
-            verticalAlign: 'middle',
-            align: 'right'
+
 
           },
         };
@@ -316,6 +363,7 @@ export class StockDetailComponent implements OnChanges {
         //   }, true);
         // }
         // this.addPoint();
+        this.tags[option] = true;
       },
       err => {
         console.log(indicator);
@@ -324,6 +372,7 @@ export class StockDetailComponent implements OnChanges {
   }
   testSMA(option: number, value: string, indicator: string, number: number) {
     console.log(option);
+    this.tags[option] = false;
     if (value == null) {
       return;
     }
@@ -413,14 +462,13 @@ export class StockDetailComponent implements OnChanges {
           }
         }],
         legend: {
-          layout: 'vertical',
-          verticalAlign: 'middle',
-          align: 'right'
+
 
         },
       };
       console.log(data_array[0]);
       this.temp_array = data_array[0];
+      this.tags[option] = true;
       // for (let i = 0 ; i < number; i++) {
       //   this.chart.addSeries({
       //     data: this.temp_array
@@ -436,12 +484,14 @@ export class StockDetailComponent implements OnChanges {
     // this.addPoint();
   }
   test(value: string): SymbolInfo {
+    this.price_tag = false;
     if (value == null) {
       return this.symbol_info;
     }
     value = value.toUpperCase();
     console.log('symbol ' + value);
-    const url = `http://localhost:3000/symbol?symbol=` + value ;
+    // const url = `http://localhost:3000/symbol?symbol=` + value ;
+    const url = 'http://localhost:3000/testsymbol';
     console.log(url);
     this.http.get(url).subscribe(data => {
       // Read the result field from the JSON response.
@@ -578,6 +628,7 @@ export class StockDetailComponent implements OnChanges {
       // this.chart.series[1].setData(this.symbol_info.volume_array);
       // this.testData.push(data[0]);
       // console.log(this.testData);
+        this.price_tag = true;
     },
       err => {
         console.log(value);
