@@ -25,6 +25,7 @@ import { StockDetailComponent } from './stock.detail';
 })
 export class AppComponent implements OnInit {
   symbol_value: String;
+  fake_count: number;
   private headers = new Headers({'Content-Type': 'application/json',
     'Access-Control-Allow-Origin' : '*'});
   symbol_text;
@@ -38,6 +39,7 @@ export class AppComponent implements OnInit {
   testData: Autodata[] = [] ;
   private searchTerms = new Subject<string>();
   constructor(private http: HttpClient, private searchService: SearchService, private stockdetail: StockDetailComponent) {
+    this.fake_count = 0;
   }
 
   search(term: string): void {
@@ -62,6 +64,7 @@ export class AppComponent implements OnInit {
   onSubmit(value: string): void {
     console.log(value);
     this.symbol_value = value;
+    this.fake_count++;
     // this.stockdetail.test(value);
   }
 
