@@ -37,4 +37,7 @@ body
 chart {
   display: block;
 }
+.progress{
+  margin-top: 4%;
+}
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
