@@ -1,4 +1,4 @@
-import {Component, Input, Output, AfterViewInit} from '@angular/core';
+import {Component, Input, Output, AfterViewInit, ChangeDetectorRef} from '@angular/core';
 import {SymbolInfo} from './symbolInfo';
 import {Newsfeed} from './newsfeed';
 import {HttpClient} from '@angular/common/http';
@@ -87,7 +87,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   sub: Subscription;
   timer;
   ticks = 0;
-  constructor(private http: HttpClient, private fb: FacebookService) {
+  constructor(private http: HttpClient, private fb: FacebookService, private cdr: ChangeDetectorRef) {
     // this. testJquery();
     this.options = new Object();
     for (let i = 0; i < 10; i++) {
@@ -1059,7 +1059,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         this.ticks = t;
         console.log(this.ticks);
         this.refresh();
-        this.refresh2();
+        this.cdr.detectChanges();
       });
 
     } else {
