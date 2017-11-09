@@ -1,15 +1,101 @@
 <div class=" well container">
-  <div id="myCarousel" class="carousel slide ">
     <!-- Carousel items -->
     <div class="carousel-inner">
+      <!--Favorite List-->
+      <div class="container" [@rightToright]='state' *ngIf="left">
+        <div class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="row">
+              <div class=" col-md-3 col-sm-4 col-xs-5 ">
+                <label class="hidden-xs">
+                  Favourite List</label>
+              </div>
+              <div class=" col-md-4 col-md-offset-5  col-sm-offset-2 col-sm-6   col-xs-7" id="menuBar-2" style="padding: 0%">
+
+
+                <label class="hidden-xs" id="labelReferesh">
+                  Automatic Refersh:</label>
+                <input type="checkbox" data-toggle="toggle">
+                <button  id ="refButtonWrapper" style="margin: 0% "> <i class="glyphicon glyphicon-refresh btn"
+                                                   id="refereshNowButton"></i></button>
+                <!--<button [@flyInOut]='"in"' *ngIf="!left" (click)="animateMe()" id ="refButtonWrapper2" class="glyphicon glyphicon-refresh btn btn-md btn-default "> </button>-->
+                <!--<button id ="refButtonWrapper"> <i class="glyphicon glyphicon-refresh btn btn-md btn-default "-->
+                                                   <!--id="refereshNowButton"></i></button>-->
+
+                <!--<button id ="nextButtton"><i href="#myCarousel" data-slide="next"-->
+                                             <!--class="glyphicon glyphicon-chevron-right btn btn-default btn-md "-->
+                                             <!--id="rightPanel-navigation"></i></button>-->
+                <!--<button href="#myCarousel" data-slide="next" style="margin: 0% "-->
+                        <!--class="btn-responsive"><i-->
+                  <!--class=" glyphicon glyphicon-chevron-right btn "></i></button>-->
+                <button (click)="animateMe()" href="#myCarousel" style="margin: 0% "
+                        class="btn-responsive"><i
+                  class=" glyphicon glyphicon-chevron-right btn "></i></button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-1 col-md-1 "></div>
+          <div class="col-xs-1 col-md-1 ">
+              <label class="hidden-xs">
+                Sort By</label>
+          </div>
+          <div class="col-xs-2 col-md-2 "><select class="form-control" id="sort">
+            <option>Default</option>
+            <option>Symbol</option>
+            <option>Stock Price</option>
+            <option>Change(Change Percent)</option>
+            <option>Volume</option>
+          </select></div>
+          <div class="col-xs-1 col-md-1 ">
+            <label class="hidden-xs">
+              Sort By</label>
+          </div>
+          <div class="col-xs-2 col-md-2 "><select class="form-control" id="order">
+            <option>Adcending</option>
+            <option>Descending</option>
+          </select></div>
+
+        </div>
+        <div class="row">
+
+          <div  id ="table-wrapper" class="container">
+            <div id ="table-scroll" class="container" >
+              <table class="table table-striped " id="favouriteTable">
+                <tr>
+                  <th><span >Symbol</span></th>
+                  <th><span>Price</span></th>
+                  <th >Change</th>
+                  <th >Change Percent)</th>
+                  <th >Volume</th>
+                  <th id="deleteTh"><button><i class="glyphicon glyphicon-trash"></i></button></th>
+                </tr>
+                <tr *ngFor="let save_data of save_datas">
+                  <td><a style="text-decoration: none;cursor:pointer" (click)="clickSaveSymbol(save_data.save_name)">{{save_data.save_name}}</a></td>
+                  <td><span>{{save_data.save_price}}</span></td>
+                  <td >{{save_data.save_change}}({{save_data.save_change_per}})</td>
+                  <td >{{save_data.save_volume}}</td>
+                  <td ><button (click)="delete(save_data.save_name)"><i class="glyphicon glyphicon-trash"></i></button></td>
+                </tr>
+
+              </table>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+      <!--/row-->
       <!--details-->
-      <div class="item active">
+      <div class="container" [@leftToright]="state" *ngIf="!left">
         <div class="navbar navbar-default">
           <div class="container-fluid">
             <div class="row">
               <div class="col-xs-3 col-md-3 ">
-                <button href="#myCarousel" data-slide="prev" style="margin: 0% "
-                        class="btn-responsive"><i
+                <button  style="margin: 0% "
+                        class="btn-responsive" (click)="animateMe()"><i
                   class=" glyphicon glyphicon-chevron-left btn "></i></button>
 
               </div>
@@ -20,221 +106,223 @@
           </div>
         </div>
         <!--Stock Detail-->
-        <div class="container" STYLE="width: 100%">
-            <ul id="tabs" class="nav nav-pills" data-tabs="tabs">
-              <li class="active stockClass"><a href="#stockDetails" data-toggle="tab"><i
-                class="glyphicon glyphicon-dashboard"> </i> <span
-                class="ScreenHide">Current</span> Stock</a></li>
-              <li class="chartClass"><a href="#HistoryChart" data-toggle="tab"><i
-                class="glyphicon glyphicon-stats" id="highStocks"> </i> <span
-                class="ScreenHide">Historical</span>
-                Charts</a></li>
-              <li id="feedTab" class="feedClass"><a href="#newsFeeds" data-toggle="tab"><i
-                class="glyphicon glyphicon-link"> </i> <span class="ScreenHide">News</span>
-                Feeds</a></li>
+        <div class="container" STYLE="width: 100%" >
+          <ul id="tabs" class="nav nav-pills" data-tabs="tabs">
+            <li class="active stockClass"><a href="#stockDetails" data-toggle="tab"><i
+              class="glyphicon glyphicon-dashboard"> </i> <span
+              class="ScreenHide">Current</span> Stock</a></li>
+            <li class="chartClass"><a href="#HistoryChart" data-toggle="tab"><i
+              class="glyphicon glyphicon-stats" id="highStocks"> </i> <span
+              class="ScreenHide">Historical</span>
+              Charts</a></li>
+            <li id="feedTab" class="feedClass"><a href="#newsFeeds" data-toggle="tab"><i
+              class="glyphicon glyphicon-link"> </i> <span class="ScreenHide">News</span>
+              Feeds</a></li>
 
-            </ul>
-            <hr>
-            <div id="my-tab-content" class="tab-content">
-              <div class="tab-pane active" id="stockDetails">
-                <!--<div class="row">-->
-                  <!--<div class="col-md-2 col-sm-4 col-xs-6">-->
-                    <!--<b>Stock Details</b>-->
-                  <!--</div>-->
-                  <!--<div class="col-md-2  ">-->
-                    <!--<button style="width: 30px ;height:30px" id="starBat"><i-->
-                      <!--class="glyphicon glyphicon-star-empty"-->
-                      <!--id="starElement"></i></button>-->
-                    <!--<a href="#"><img-->
-                      <!--src="https://www.sentinelsystems.ca/uploads/images/Buttons/FB_button.png"-->
-                      <!--style="width: 30px ;height:30px" id="fbData"></a>-->
-                  <!--</div>-->
-                <!--</div>-->
-
-                <div class="row">
-                  <div class="col-md-6">
-                    <div style="height: 35px">
-                      <div style="float:left; font-weight: bold">Stock Details</div>
-                      <div style="float:right; text-align: right">
-                        <div class="icon_wrap">
-                          <button style="width: 30px ;height:30px" id="starBat"><i
+          </ul>
+          <hr>
+          <div id="my-tab-content" class="tab-content">
+            <div class="tab-pane active" id="stockDetails">
+              <!--<div class="row">-->
+              <!--<div class="col-md-2 col-sm-4 col-xs-6">-->
+              <!--<b>Stock Details</b>-->
+              <!--</div>-->
+              <!--<div class="col-md-2  ">-->
+              <!--<button style="width: 30px ;height:30px" id="starBat"><i-->
+              <!--class="glyphicon glyphicon-star-empty"-->
+              <!--id="starElement"></i></button>-->
+              <!--<a href="#"><img-->
+              <!--src="https://www.sentinelsystems.ca/uploads/images/Buttons/FB_button.png"-->
+              <!--style="width: 30px ;height:30px" id="fbData"></a>-->
+              <!--</div>-->
+              <!--</div>-->
+              <!--#fb [disabled]="isFBVaild()"-->
+              <div class="row">
+                <div class="col-md-6">
+                  <div style="height: 35px">
+                    <div style="float:left; font-weight: bold">Stock Details</div>
+                    <div style="float:right; text-align: right">
+                      <div class="icon_wrap">
+                        <button (click)="bookmark()" style="background-color: white;border: 1px solid #e7e7e7;width: 35px; height: 35px;padding: 0" class="btn btn-outline-secondary" id="starBat">
+                          <i
                             class="glyphicon glyphicon-star-empty"
-                            id="starElement"></i></button>
+                            id="starElement"
+                            style="width: 20px; height: 20px; margin-top:4px"></i></button>
+                        <button [disabled]="!isFBVaild()" (click)="share()" style="background-color: white;border: 1px solid #e7e7e7;width: 35px; height: 35px; padding: 0" class="btn btn-outline-secondary" id="fb">
                           <img src="http://cs-server.usc.edu:45678/hw/hw8/images/facebook.png"
-                               style="width: 25px; height: 25px; margin-top:4px"/>
-                        </div>
-                        <div class="icon_wrap">
-                          <img src="" style="width: 20px"/>
-                        </div>
+                               style="width: 20px; height: 20px; margin-top:4px"/></button>
                       </div>
-                    </div>
-                    <div *ngIf="!price_tag" class="progress">
-                      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                    </div>
-                    <div *ngIf="price_tag" style="width: 100%; padding-right: 0;padding-left: 0;" class="container">
-                      <table class="table table-striped">
-                        <tbody>
-                        <tr>
-                          <th>Stock Ticker Symol</th>
-                          <td>{{symbol_info.symbol}}</td>
-                        </tr>
-                        <tr>
-                          <th>Last Price</th>
-                          <td>{{symbol_info.close}}</td>
-                        </tr>
-                        <tr>
-                          <th>Change(Change Percent)</th>
-                          <td *ngIf="symbol_info.change >= 0" style="color: green">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Green_Arrow_Up.png' alt='up' width='15' height='15'></td>
-                          <td *ngIf="symbol_info.change < 0" style="color: red">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Red_Arrow_Down.png' alt='up' width='15' height='15'></td>
-                        </tr>
-                        <tr>
-                          <th>Timestamp</th>
-                          <td>{{symbol_info.timestamp}}</td>
-                        </tr>
-                        <tr>
-                          <th>Open</th>
-                          <td>{{symbol_info.open}}</td>
-                        </tr>
-                        <tr>
-                          <th>Close</th>
-                          <td>{{symbol_info.close}}</td>
-                        </tr>
-                        <tr>
-                          <th>Day's Range</th>
-                          <td>{{symbol_info.range}}</td>
-                        </tr>
-                        <tr>
-                          <th>Volume</th>
-                          <td>{{symbol_info.volume}}</td>
-                        </tr>
-                        </tbody>
-                      </table>
-
-
+                      <div class="icon_wrap">
+                        <img src="" style="width: 20px"/>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div>
-                      <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#chart_price">Price</a></li>
-                        <li><a data-toggle="tab" href="#indicator_SMA">SMA</a></li>
-                        <li><a data-toggle="tab" href="#indicator_EMA">EMA</a></li>
-                        <li><a data-toggle="tab" href="#indicator_STOCH">STOCH</a></li>
-                        <li><a data-toggle="tab" href="#indicator_RSI">RSI</a></li>
-                        <li><a data-toggle="tab" href="#indicator_ADX">ADX</a></li>
-                        <li><a data-toggle="tab" href="#indicator_CCI">CCI</a></li>
-                        <li><a data-toggle="tab" href="#indicator_BBANDS">BBANDS</a></li>
-                        <li><a data-toggle="tab" href="#indicator_MACD">MACD</a></li>
-                      </ul>
+                  <div *ngIf="!price_tag" class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                  </div>
+                  <div *ngIf="price_tag" style="width: 100%; padding-right: 0;padding-left: 0;" class="container">
+                    <table class="table table-striped">
+                      <tbody>
+                      <tr>
+                        <th>Stock Ticker Symol</th>
+                        <td>{{symbol_info.symbol}}</td>
+                      </tr>
+                      <tr>
+                        <th>Last Price</th>
+                        <td>{{symbol_info.close}}</td>
+                      </tr>
+                      <tr>
+                        <th>Change(Change Percent)</th>
+                        <td *ngIf="symbol_info.change >= 0" style="color: green">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Green_Arrow_Up.png' alt='up' width='15' height='15'></td>
+                        <td *ngIf="symbol_info.change < 0" style="color: red">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Red_Arrow_Down.png' alt='up' width='15' height='15'></td>
+                      </tr>
+                      <tr>
+                        <th>Timestamp</th>
+                        <td>{{symbol_info.timestamp}}</td>
+                      </tr>
+                      <tr>
+                        <th>Open</th>
+                        <td>{{symbol_info.open}}</td>
+                      </tr>
+                      <tr>
+                        <th>Close</th>
+                        <td>{{symbol_info.close}}</td>
+                      </tr>
+                      <tr>
+                        <th>Day's Range</th>
+                        <td>{{symbol_info.range}}</td>
+                      </tr>
+                      <tr>
+                        <th>Volume</th>
+                        <td>{{symbol_info.volume}}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div>
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#chart_price" (click)="changeTagNumber('Price')">Price</a></li>
+                      <li><a data-toggle="tab" href="#indicator_SMA" (click)="changeTagNumber('SMA')">SMA</a></li>
+                      <li><a data-toggle="tab" href="#indicator_EMA" (click)="changeTagNumber('EMA')">EMA</a></li>
+                      <li><a data-toggle="tab" href="#indicator_STOCH" (click)="changeTagNumber('STOCH')">STOCH</a></li>
+                      <li><a data-toggle="tab" href="#indicator_RSI" (click)="changeTagNumber('RSI')">RSI</a></li>
+                      <li><a data-toggle="tab" href="#indicator_ADX" (click)="changeTagNumber('ADX')">ADX</a></li>
+                      <li><a data-toggle="tab" href="#indicator_CCI" (click)="changeTagNumber('CCI')">CCI</a></li>
+                      <li><a data-toggle="tab" href="#indicator_BBANDS" (click)="changeTagNumber('BBANDS')">BBANDS</a></li>
+                      <li><a data-toggle="tab" href="#indicator_MACD" (click)="changeTagNumber('MACD')">MACD</a></li>
+                    </ul>
+                  </div>
+                  <div class="tab-content">
+                    <div id="chart_price" class="tab-pane fade in active">
+                      <div *ngIf="!price_tag" class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                      </div>
+                      <div *ngIf="price_tag" class="detail_wrapper" >
+                        <chart  [options]="options">
+                        </chart>
+                      </div>
                     </div>
-                    <div class="tab-content">
-                      <div id="chart_price" class="tab-pane fade in active">
-                        <div *ngIf="!price_tag" class="progress">
-                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                        </div>
-                        <div *ngIf="price_tag" class="detail_wrapper" >
-                          <chart  [options]="options">
-                          </chart>
-                        </div>
+                    <div id="indicator_SMA" class="tab-pane fade">
+                      <div *ngIf="!tags[0]" class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
                       </div>
-                      <div id="indicator_SMA" class="tab-pane fade">
-                        <div *ngIf="!tags[0]" class="progress">
-                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                        </div>
-                        <div class="detail_wrapper" *ngIf="tags[0]">
-                          <chart  [options]="ops[0]" (load)="saveChart($event.context)">
-                          </chart>
-                        </div>
+                      <div class="detail_wrapper" *ngIf="tags[0]">
+                        <chart  [options]="ops[0]" (load)="saveChart($event.context)">
+                        </chart>
                       </div>
-                      <div id="indicator_EMA" class="tab-pane fade">
-                        <div *ngIf="!tags[1]" class="progress">
-                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                        </div>
-                        <div *ngIf="tags[1]" class="detail_wrapper">
-                          <chart  [options]="ops[1]" >
-                          </chart>
-                        </div>
+                    </div>
+                    <div id="indicator_EMA" class="tab-pane fade">
+                      <div *ngIf="!tags[1]" class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
                       </div>
-                      <div id="indicator_STOCH" class="tab-pane fade">
-                        <div *ngIf="!tags[2]" class="progress">
-                          <div  class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                        </div>
-                        <div *ngIf="tags[2]" class="detail_wrapper">
-                          <chart  [options]="ops[2]" >
-                          </chart>
-                        </div>
+                      <div *ngIf="tags[1]" class="detail_wrapper">
+                        <chart  [options]="ops[1]" >
+                        </chart>
                       </div>
-                      <div id="indicator_RSI" class="tab-pane fade">
-                        <div *ngIf="!tags[3]" class="progress">
-                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                        </div>
-                        <div *ngIf="tags[3]" class="detail_wrapper">
-                          <chart  [options]="ops[3]" >
-                          </chart>
-                        </div>
+                    </div>
+                    <div id="indicator_STOCH" class="tab-pane fade">
+                      <div *ngIf="!tags[2]" class="progress">
+                        <div  class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
                       </div>
-                      <div id="indicator_ADX" class="tab-pane fade">
-                        <div *ngIf="!tags[4]" class="progress">
-                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                        </div>
-                        <div *ngIf="tags[4]"  class="detail_wrapper">
-                          <chart  [options]="ops[4]" >
-                          </chart>
-                        </div>
+                      <div *ngIf="tags[2]" class="detail_wrapper">
+                        <chart  [options]="ops[2]" >
+                        </chart>
                       </div>
-                      <div id="indicator_CCI" class="tab-pane fade">
-                        <div *ngIf="!tags[5]" class="progress">
-                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                        </div>
-                        <div *ngIf="tags[5]" class="detail_wrapper">
-                          <chart  [options]="ops[5]" >
-                          </chart>
-                        </div>
+                    </div>
+                    <div id="indicator_RSI" class="tab-pane fade">
+                      <div *ngIf="!tags[3]" class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
                       </div>
-                      <div id="indicator_BBANDS" class="tab-pane fade">
-                        <div *ngIf="!tags[6]" class="progress">
-                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                        </div>
-                        <div *ngIf="tags[6]" class="detail_wrapper">
-                          <chart  [options]="ops[6]" >
-                          </chart>
-                        </div>
+                      <div *ngIf="tags[3]" class="detail_wrapper">
+                        <chart  [options]="ops[3]" >
+                        </chart>
                       </div>
-                      <div id="indicator_MACD" class="tab-pane fade">
-                        <div *ngIf="!tags[7]" class="progress">
-                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                        </div>
-                        <div *ngIf="tags[7]" class="detail_wrapper">
-                          <chart  [options]="ops[7]" >
-                          </chart>
-                        </div>
+                    </div>
+                    <div id="indicator_ADX" class="tab-pane fade">
+                      <div *ngIf="!tags[4]" class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                      </div>
+                      <div *ngIf="tags[4]"  class="detail_wrapper">
+                        <chart  [options]="ops[4]" >
+                        </chart>
+                      </div>
+                    </div>
+                    <div id="indicator_CCI" class="tab-pane fade">
+                      <div *ngIf="!tags[5]" class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                      </div>
+                      <div *ngIf="tags[5]" class="detail_wrapper">
+                        <chart  [options]="ops[5]" >
+                        </chart>
+                      </div>
+                    </div>
+                    <div id="indicator_BBANDS" class="tab-pane fade">
+                      <div *ngIf="!tags[6]" class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                      </div>
+                      <div *ngIf="tags[6]" class="detail_wrapper">
+                        <chart  [options]="ops[6]" >
+                        </chart>
+                      </div>
+                    </div>
+                    <div id="indicator_MACD" class="tab-pane fade">
+                      <div *ngIf="!tags[7]" class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                      </div>
+                      <div *ngIf="tags[7]" class="detail_wrapper">
+                        <chart  [options]="ops[7]" >
+                        </chart>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div id="newsFeeds" class="tab-pane fade">
-                <div  *ngIf="!news_tag" class="progress">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                </div>
-                <div class="container" *ngFor="let newsfeed of newsfeeds">
-                  <div class ="well" style="width:95% ;background-color: #E9E9E9">
+            </div>
+            <div id="newsFeeds" class="tab-pane fade">
+              <div  *ngIf="!news_tag" class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+              </div>
+              <div class="container" *ngFor="let newsfeed of newsfeeds">
+                <div class ="well" style="width:95% ;background-color: #E9E9E9">
                   <div style="margin-bottom:2%"><a href='{{newsfeed.link}}' target="_blank ">{{newsfeed.title}}</a></div>
                   <div class="FeedContent" style="margin-bottom:2%"></div>
                   <div  style="margin-bottom:2%;font-weight:bolder">Author: {{newsfeed.author}}</div>
                   <div  style="font-weight: bolder">Date: {{newsfeed.date}} EDT</div></div>
-                </div>
-              </div>
-              <div id="HistoryChart" class="tab-pane fade">
-                <div *ngIf="!price_tag" class="progress">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
-                </div>
-                <chart *ngIf="price_tag" type="StockChart" [options]="highStockoptions"></chart>
               </div>
             </div>
+            <div id="HistoryChart" class="tab-pane fade">
+              <div *ngIf="!price_tag" class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+              </div>
+              <chart *ngIf="price_tag" type="StockChart" [options]="highStockoptions"></chart>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 </div>
 

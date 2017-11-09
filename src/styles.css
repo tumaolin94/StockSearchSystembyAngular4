@@ -13,8 +13,10 @@
 .row {
   margin-left: -15px;margin-right: -15px;
 }
-body {
-  background-color: #000000 !important;
+body
+{
+  background-image:url('http://cs-server.usc.edu:45678/hw/hw8/images/background.png');
+  /*background-repeat:repeat-x, repeat-y;*/
 }
 .highcharts-container {
   width:100% !important;
