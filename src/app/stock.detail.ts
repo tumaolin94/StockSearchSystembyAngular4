@@ -560,8 +560,8 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     this.ifBindToggle = false;
     value = value.toUpperCase();
     console.log('symbol ' + value);
-    // const url = `http://localhost:3000/symbol?symbol=` + value;
-    const url = 'http://localhost:3000/testsymbol';
+    const url = `http://localhost:3000/symbol?symbol=` + value;
+    // const url = 'http://localhost:3000/testsymbol';
     console.log(url);
     this.http.get(url).subscribe(data => {
         // Read the result field from the JSON response.
@@ -679,7 +679,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
             },
 
             opposite: true,
-            max: volume_max * 4
+            max: volume_max * 2
           }],
           series: [{
             name: 'Price',
@@ -1084,6 +1084,15 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   // }
   testInterval() {
     console.log('count');
+  }
+  isYellowStar(): boolean {
+    for (let key in this.save_datas) {
+      if (this.save_datas[key].save_name === this.symbol_info.symbol) {
+        console.log('isYellowStar' + this.symbol_info.symbol);
+        return true;
+      }
+    }
+    return false;
   }
 
 }
