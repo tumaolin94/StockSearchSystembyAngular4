@@ -19,6 +19,7 @@ import 'rxjs/add/observable/timer';
 import {SimpleChanges, OnChanges} from '@angular/core';
 import {StockData} from './stockData';
 import {SaveData} from './saveData';
+import {OrderByPipe} from './orderby.pipe';
 import {
   FacebookService,
   LoginResponse,
@@ -29,7 +30,8 @@ import {
   InitParams
 } from 'ngx-facebook';
 import {trigger, state, style, transition, animate, keyframes} from '@angular/animations';
-
+declare var jquery: any;
+declare var $: any;
 @Component({
   selector: 'stock-detail',
   templateUrl: './stock.detail.html',
@@ -75,7 +77,13 @@ export class StockDetailComponent implements OnChanges {
   myStorage = window.localStorage;
   save_symbol;
   save_datas: SaveData[];
+  chosenOption = 'Default';
+  chosenOrder = 'Adcending';
+  disableOrder = true;
+  checkboxValue = false;
   constructor(private http: HttpClient, private fb: FacebookService) {
+    // this. testJquery();
+    $('#toggle-one').bootstrapToggle();
     this.options = new Object();
     for (let i = 0; i < 10; i++) {
       this.ops.push(new Object());
@@ -118,7 +126,7 @@ export class StockDetailComponent implements OnChanges {
     console.log(this.symbol_info.price_array);
     // let timer = Observable.timer(600);
     // timer.subscribe(t => {
-      this.testSMA(0, this.symbol, 'SMA', 1);
+    this.testSMA(0, this.symbol, 'SMA', 1);
     //   this.testSMA(1, this.symbol, 'EMA', 1);
     //   this.testStOCH(2, this.symbol, 'STOCH', 2);
     // });
@@ -544,8 +552,8 @@ export class StockDetailComponent implements OnChanges {
     }
     value = value.toUpperCase();
     console.log('symbol ' + value);
-    const url = `http://localhost:3000/symbol?symbol=` + value ;
-    // const url = 'http://localhost:3000/testsymbol';
+    // const url = `http://localhost:3000/symbol?symbol=` + value;
+    const url = 'http://localhost:3000/testsymbol';
     console.log(url);
     this.http.get(url).subscribe(data => {
         // Read the result field from the JSON response.
@@ -620,8 +628,9 @@ export class StockDetailComponent implements OnChanges {
         this.symbol_info.timestamp = timestamp;
         const temp_change = (parseFloat(close) - pre_close);
         this.symbol_info.change = temp_change.toFixed(2);
-        this.symbol_info.change_per = (temp_change / 100).toFixed(2);
+        this.symbol_info.change_per = (temp_change / pre_close * 100).toFixed(2);
         this.symbol_info.volume = volume;
+        this.symbol_info.new_volume = volume.replace(/\B(?=(?:\d{3})+\b)/g, ',');
         this.symbol_info.range = low + '-' + high;
         console.log(this.symbol_info.price_array);
         const charTitle = symbol + ' Stock Price and Volume';
@@ -823,8 +832,12 @@ export class StockDetailComponent implements OnChanges {
 
 
   animateMe() {
+    console.log($('#toggle-one').bootstrapToggle());
     if (this.state === 'first') {
       this.state = 'in';
+    }
+    if (this.left === false) {
+      this. testJquery();
     }
     this.left = (this.left ? false : true);
   }
@@ -853,10 +866,10 @@ export class StockDetailComponent implements OnChanges {
     } else {
       save_datas = JSON.parse(localStorage.getItem('save_datas'));
     }
-    save_datas.push(new SaveData(this.symbol.toUpperCase(), this.symbol_info.close,
-      this.symbol_info.change, this.symbol_info.change_per, this.symbol_info.volume));
-    this.save_datas.push(new SaveData(this.symbol.toUpperCase(), this.symbol_info.close,
-      this.symbol_info.change, this.symbol_info.change_per, this.symbol_info.volume));
+    save_datas.push(new SaveData(this.symbol.toUpperCase(), parseFloat(this.symbol_info.close),
+      parseFloat(this.symbol_info.change), parseFloat(this.symbol_info.change_per), parseInt(this.symbol_info.volume), Date.now().toString()));
+    this.save_datas.push(new SaveData(this.symbol.toUpperCase(), parseFloat(this.symbol_info.close),
+      parseFloat(this.symbol_info.change), parseFloat(this.symbol_info.change_per), parseInt(this.symbol_info.volume), Date.now().toString()));
     // this.save_symbol.push(this.symbol.toUpperCase());
     // let save_sybol = JSON.parse(localStorage.getItem('save_sybol'));
     // let save_sybol = [];
@@ -865,23 +878,25 @@ export class StockDetailComponent implements OnChanges {
     // let storedNames = JSON.parse(localStorage.getItem("names"));
     console.log(this.myStorage.getItem('save_datas'));
   }
+
   delete(symbol: String) {
     console.log('delete' + symbol);
     for (let key in this.save_datas) {
       console.log(this.save_datas[key].save_name);
       if (this.save_datas[key].save_name === symbol) {
         console.log('delete' + symbol);
-        this.save_datas.splice( parseInt(key), 1);
+        this.save_datas.splice(parseInt(key), 1);
         console.log(this.save_datas);
         localStorage.setItem('save_datas', JSON.stringify(this.save_datas));
         break;
       }
     }
   }
+
   clickSaveSymbol(symbol: string) {
     console.log(symbol + ' ' + this.symbol);
     this.animateMe();
-    if ( symbol === this.symbol) {
+    if (symbol === this.symbol) {
     } else {
       this.symbol = symbol;
       this.test(symbol);
@@ -904,4 +919,109 @@ export class StockDetailComponent implements OnChanges {
     }
 
   }
+
+  chooseOrderby() {
+
+    console.log('choosing:' + this.chosenOption);
+    if (this.chosenOption === 'Default') {
+      this.disableOrder = true;
+    } else {
+      this.disableOrder = false;
+    }
+  }
+
+  orderby(): string {
+    // console.log('orderby:' + this.chosenOption);
+    this.testJquery();
+    switch (this.chosenOption) {
+      case 'Default': {
+        return 'save_time';
+      }
+      case 'Symbol': {
+        return 'save_name';
+      }
+      case 'Price': {
+        return 'save_price';
+      }
+      case 'Change': {
+        return 'save_change';
+      }
+      case 'Change Percent': {
+        return 'save_change_per';
+      }
+      case 'Volume': {
+        return 'save_volume';
+      }
+    }
+  }
+
+  isAdcending(): boolean {
+    // console.log(this.chosenOrder);
+    if (this.chosenOrder === 'Adcending') {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  testJquery() {
+    console.log(this.checkboxValue);
+    console.log('testJquery' +
+      '')
+    $('#toggle-one').bootstrapToggle();
+  }
+  refresh() {
+    this.testJquery();
+    console.log('before refresh');
+    console.log(this.save_datas);
+    for (let i in this.save_datas) {
+      const url = `http://localhost:3000/symbol?symbol=` + this.save_datas[i].save_name;
+      // const url = 'http://localhost:3000/testsymbol';
+      console.log(url);
+    this.refreshData(i, url);
+
+    }
+    console.log('after refresh');
+    console.log(this.save_datas);
+  }
+  refreshData(index: string, url: string ) {
+    this.http.get(url).subscribe( data => {
+        const meta = data['Meta Data'];
+        const array_values = data['Time Series (Daily)'];
+        const symbol = meta['2. Symbol'];
+        const timestamp = meta['3. Last Refreshed'];
+        let open = '';
+        let close = '';
+        let volume = '';
+        let count = 0;
+        let pre_close = 0;
+        for (let key in array_values) {
+          // console.log(key);
+          if (count === 0) {
+            open = array_values[key]['1. open'];
+            console.log(open);
+            close = array_values[key]['4. close'];
+            volume = array_values[key]['5. volume'];
+            break;
+          }
+          count++;
+        }
+        pre_close = this.save_datas[index].save_price;
+        const temp_change = (parseFloat(close) - pre_close);
+        this.save_datas[index].save_change = parseFloat(temp_change.toFixed(2));
+        this.save_datas[index].save_change_per = parseFloat((temp_change / pre_close * 100).toFixed(2));
+        this.save_datas[index].save_price = parseFloat(close);
+        this.save_datas[index].save_volume = parseInt(volume);
+        this.save_datas[index].save_new_volume = volume.replace(/\B(?=(?:\d{3})+\b)/g, ',');
+        console.log('refresh ' + this.save_datas[index].save_name);
+        console.log('refresh ' + this.save_datas[index].save_price);
+      },
+      err => {
+        console.log(err);
+      });
+  }
+  SwitchFresh() {
+    console.log(this.checkboxValue);
+  }
+
+
 }
