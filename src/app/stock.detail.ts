@@ -1,4 +1,4 @@
-import {Component, Input, Output} from '@angular/core';
+import {Component, Input, Output, AfterViewInit} from '@angular/core';
 import {SymbolInfo} from './symbolInfo';
 import {Newsfeed} from './newsfeed';
 import {HttpClient} from '@angular/common/http';
@@ -15,6 +15,7 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/timer';
 import {SimpleChanges, OnChanges} from '@angular/core';
 import {StockData} from './stockData';
@@ -55,7 +56,7 @@ declare var $: any;
   // providers: [SearchService]
 })
 
-export class StockDetailComponent implements OnChanges {
+export class StockDetailComponent implements OnChanges, AfterViewInit {
   @Input() symbol: string;
   @Input() fake_count: number;
   chart;
@@ -81,9 +82,13 @@ export class StockDetailComponent implements OnChanges {
   chosenOrder = 'Adcending';
   disableOrder = true;
   checkboxValue = false;
+  ifBindToggle = true;
+  handle;
+  sub: Subscription;
+  timer;
+  ticks = 0;
   constructor(private http: HttpClient, private fb: FacebookService) {
     // this. testJquery();
-    $('#toggle-one').bootstrapToggle();
     this.options = new Object();
     for (let i = 0; i < 10; i++) {
       this.ops.push(new Object());
@@ -122,6 +127,7 @@ export class StockDetailComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+
     this.symbol_info = this.test(this.symbol);
     console.log(this.symbol_info.price_array);
     // let timer = Observable.timer(600);
@@ -546,10 +552,12 @@ export class StockDetailComponent implements OnChanges {
   }
 
   test(value: string): SymbolInfo {
+
     this.price_tag = false;
     if (value == null) {
       return this.symbol_info;
     }
+    this.ifBindToggle = false;
     value = value.toUpperCase();
     console.log('symbol ' + value);
     // const url = `http://localhost:3000/symbol?symbol=` + value;
@@ -836,9 +844,8 @@ export class StockDetailComponent implements OnChanges {
     if (this.state === 'first') {
       this.state = 'in';
     }
-    if (this.left === false) {
-      this. testJquery();
-    }
+    this.ifBindToggle = false;
+    console.log('animateMe');
     this.left = (this.left ? false : true);
   }
 
@@ -966,11 +973,22 @@ export class StockDetailComponent implements OnChanges {
   testJquery() {
     console.log(this.checkboxValue);
     console.log('testJquery' +
-      '')
-    $('#toggle-one').bootstrapToggle();
+      '');
+    if (this.ifBindToggle === false) {
+      console.log('ifBindToggle' + false);
+      $('#toggle-one').bootstrapToggle();
+      $('#toggle-one').change((event) => {
+        this.toggleValueChanged(event.target.checked);
+      });
+      this.ifBindToggle = true;
+    }
+
+  }
+  refresh2() {
+    console.log(this.save_datas);
   }
   refresh() {
-    this.testJquery();
+    // this.testJquery();
     console.log('before refresh');
     console.log(this.save_datas);
     for (let i in this.save_datas) {
@@ -1022,6 +1040,50 @@ export class StockDetailComponent implements OnChanges {
   SwitchFresh() {
     console.log(this.checkboxValue);
   }
+  ngAfterViewInit() {
+    $('#toggle-one').bootstrapToggle();
+    $('#toggle-one').change((event) => {
+      this.toggleValueChanged(event.target.checked);
+    });
+  }
 
+  toggleValueChanged(toggleValue: boolean) {
+    this.checkboxValue = toggleValue;
+
+    console.log('toggle changed', this.checkboxValue);
+    if (this.checkboxValue === true) {
+      console.log('toggle inner ', this.checkboxValue);
+      console.log(this.save_datas);
+      this.timer = Observable.timer(0, 5000); //delay, period
+      this.sub = this.timer.subscribe(t => {
+        this.ticks = t;
+        console.log(this.ticks);
+        this.refresh();
+        this.refresh2();
+      });
+
+    } else {
+      console.log('toggle inner ', this.checkboxValue);
+      this.sub.unsubscribe();
+    }
+  }
+  // toggleValueChanged(toggleValue: boolean) {
+  //   this.checkboxValue = toggleValue;
+  //
+  //   console.log('toggle changed', this.checkboxValue);
+  //   if (this.checkboxValue === true) {
+  //     console.log('toggle inner ', this.checkboxValue);
+  //     console.log(this.save_datas);
+  //     this.handle = setInterval( this.refresh, 5000);
+  //
+  //   } else {
+  //     console.log('toggle inner ', this.checkboxValue);
+  //     clearInterval(this.handle);
+  //     this.handle = 0; // I just do this so I know I've cleared the interval
+  //   }
+  // }
+  testInterval() {
+    console.log('count');
+  }
 
 }
