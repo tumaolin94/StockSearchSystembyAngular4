@@ -68,6 +68,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   ops: Object[] = [];
   tags: boolean[] = [];
   price_tag: boolean;
+  price_error_tage = false;
   news_tag: boolean;
   symbol_info: SymbolInfo = new SymbolInfo();
   temp_array: number[] = [];
@@ -127,24 +128,23 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
     this.symbol_info = this.test(this.symbol);
     console.log(this.symbol_info.price_array);
-    // let timer = Observable.timer(600);
-    // timer.subscribe(t => {
+    let timer = Observable.timer(600);
+    timer.subscribe(t => {
     this.testSMA(0, this.symbol, 'SMA', 1);
-    //   this.testSMA(1, this.symbol, 'EMA', 1);
-    //   this.testStOCH(2, this.symbol, 'STOCH', 2);
-    // });
-    // let timer2 = Observable.timer(300);
-    // timer2.subscribe(t => {
-    //   this.testSMA(3, this.symbol, 'RSI', 1);
-    //   this.testThree(6, this.symbol, 'BBANDS', 3);
-    //   this.testThree(7, this.symbol, 'MACD', 3);
-    // });
-    //
-    // this.testSMA(4, this.symbol, 'ADX', 1);
-    // this.testSMA(5, this.symbol, 'CCI', 1);
+      this.testSMA(1, this.symbol, 'EMA', 1);
+      this.testSTOCH(2, this.symbol, 'STOCH', 2);
+    });
+    let timer2 = Observable.timer(300);
+    timer2.subscribe(t => {
+      this.testSMA(3, this.symbol, 'RSI', 1);
+      this.testThree(6, this.symbol, 'BBANDS', 3);
+      this.testThree(7, this.symbol, 'MACD', 3);
+    });
+
+    this.testSMA(4, this.symbol, 'ADX', 1);
+    this.testSMA(5, this.symbol, 'CCI', 1);
     this.testNews(this.symbol);
 
   }
@@ -159,6 +159,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   //
   // }
   testNews(value: string) {
+    this.news_tag = false;
     if (value == null) {
       return;
     }
@@ -326,7 +327,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       });
   }
 
-  testStOCH(option: number, value: string, indicator: string, number: number) {
+  testSTOCH(option: number, value: string, indicator: string, number: number) {
     console.log(option);
     this.tags[option] = false;
     if (value == null) {
@@ -907,21 +908,21 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     } else {
       this.symbol = symbol;
       this.test(symbol);
-      // let timer = Observable.timer(600);
-      // timer.subscribe(t => {
+      let timer = Observable.timer(600);
+      timer.subscribe(t => {
       this.testSMA(0, this.symbol, 'SMA', 1);
-      //   this.testSMA(1, this.symbol, 'EMA', 1);
-      //   this.testStOCH(2, this.symbol, 'STOCH', 2);
-      // });
-      // let timer2 = Observable.timer(300);
-      // timer2.subscribe(t => {
-      //   this.testSMA(3, this.symbol, 'RSI', 1);
-      //   this.testThree(6, this.symbol, 'BBANDS', 3);
-      //   this.testThree(7, this.symbol, 'MACD', 3);
-      // });
-      //
-      // this.testSMA(4, this.symbol, 'ADX', 1);
-      // this.testSMA(5, this.symbol, 'CCI', 1);
+        this.testSMA(1, this.symbol, 'EMA', 1);
+        this.testSTOCH(2, this.symbol, 'STOCH', 2);
+      });
+      let timer2 = Observable.timer(300);
+      timer2.subscribe(t => {
+        this.testSMA(3, this.symbol, 'RSI', 1);
+        this.testThree(6, this.symbol, 'BBANDS', 3);
+        this.testThree(7, this.symbol, 'MACD', 3);
+      });
+
+      this.testSMA(4, this.symbol, 'ADX', 1);
+      this.testSMA(5, this.symbol, 'CCI', 1);
       this.testNews(this.symbol);
     }
 
@@ -984,9 +985,9 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     }
 
   }
-  refresh2() {
-    console.log(this.save_datas);
-  }
+  // refresh2() {
+  //   console.log(this.save_datas);
+  // }
   refresh() {
     // this.testJquery();
     console.log('before refresh');
@@ -1019,11 +1020,12 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
             console.log(open);
             close = array_values[key]['4. close'];
             volume = array_values[key]['5. volume'];
-            break;
+          }
+          if (count === 1) {
+            pre_close = array_values[key]['4. close'];
           }
           count++;
         }
-        pre_close = this.save_datas[index].save_price;
         const temp_change = (parseFloat(close) - pre_close);
         this.save_datas[index].save_change = parseFloat(temp_change.toFixed(2));
         this.save_datas[index].save_change_per = parseFloat((temp_change / pre_close * 100).toFixed(2));
@@ -1088,7 +1090,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   isYellowStar(): boolean {
     for (let key in this.save_datas) {
       if (this.save_datas[key].save_name === this.symbol_info.symbol) {
-        console.log('isYellowStar' + this.symbol_info.symbol);
+        // console.log('isYellowStar' + this.symbol_info.symbol);
         return true;
       }
     }
