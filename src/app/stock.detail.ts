@@ -792,36 +792,56 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   share() {
     let dataString = '';
     if (this.tag_number === 9) {
-      dataString = encodeURI('async=false&type=jpeg&width=600&options=' + JSON.stringify(this.options));
+      dataString = encodeURI(JSON.stringify(this.options));
+      // dataString = encodeURI('async=false&type=jpeg&width=600&options=' + JSON.stringify(this.options));
     } else {
-      dataString = encodeURI('async=false&type=jpeg&width=600&options=' + JSON.stringify(this.ops[this.tag_number]));
+      dataString = encodeURI(JSON.stringify(this.ops[this.tag_number]));
+      // dataString = encodeURI('async=false&type=jpeg&width=600&options=' + JSON.stringify(this.ops[this.tag_number]));
     }
-    // const exportUrl = 'http://localhost:3000/fb';
+    const Url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/fb';
     const exportUrl = 'http://export.highcharts.com/';
-    // console.log(exportUrl);
-    // console.log(dataString);
-    this.http.post(exportUrl, dataString, {
-      responseType: 'text',
-      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-        .append('accept', '*/*'),
-      // params: new HttpParams().set('options', optionsStr),
-    }).subscribe(res => {
-        console.log(res);
-        console.log(exportUrl + res);
-        const options: UIParams = {
-          method: 'feed',
-          link: exportUrl + res,
-        };
+    this.http.get(Url + '?options=' + dataString, { responseType: 'text'}).subscribe( data => {
+            console.log(data);
+            console.log(exportUrl + data);
+            const options: UIParams = {
+              method: 'feed',
+              link: exportUrl + data,
+            };
 
-        this.fb.ui(options)
-          .then((res: UIResponse) => {
-            alert('Posted Successful!');
-          })
-          .catch(this.handleError);
+            this.fb.ui(options)
+              .then((res: UIResponse) => {
+                alert('Posted Successful!');
+              })
+              .catch(this.handleError);
       },
       err => {
+        console.log('error');
         console.log(err);
       });
+    // console.log(exportUrl);
+    // console.log(dataString);
+    // this.http.post(exportUrl, dataString, {
+    //   responseType: 'text',
+    //   headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    //     .append('accept', '*/*'),
+    //   // params: new HttpParams().set('options', optionsStr),
+    // }).subscribe(res => {
+    //     console.log(res);
+    //     console.log(exportUrl + res);
+    //     const options: UIParams = {
+    //       method: 'feed',
+    //       link: exportUrl + res,
+    //     };
+    //
+    //     this.fb.ui(options)
+    //       .then((res: UIResponse) => {
+    //         alert('Posted Successful!');
+    //       })
+    //       .catch(this.handleError);
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   });
   }
 
   changeTagNumber(value: string) {
@@ -1079,6 +1099,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     console.log(this.checkboxValue);
   }
   ngAfterViewInit() {
+    this.tag_number = 9;
     $('#toggle-one').bootstrapToggle();
     $('#toggle-one').change((event) => {
       this.toggleValueChanged(event.target.checked);

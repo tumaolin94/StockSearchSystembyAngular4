@@ -10,15 +10,15 @@
                 <label>
                   Favourite List</label>
               </div>
-              <div class=" col-md-4 col-md-offset-5  col-sm-offset-2 col-sm-6   col-xs-7" id="menuBar-2" style="padding: 0%">
+              <div class=" col-md-4 col-md-offset-5  col-sm-offset-2 col-sm-6   col-xs-7" id="menuBar-2" style="padding-bottom: 5px">
 
 
                 <label id="labelReferesh" class="hidden-xs" style="margin-left: 15%;">
                   Automatic Refersh:</label>
-                <input class="onoffswitch-checkbox" [(ngModel)]="checkboxValue"  id="toggle-one" type="checkbox" data-toggle="toggle" >
+                <input class="onoffswitch-checkbox " [(ngModel)]="checkboxValue"  id="toggle-one" type="checkbox" data-toggle="toggle" >
                 <!--<input class="onoffswitch-checkbox" id="toggle-one" type="checkbox" data-toggle="toggle" >-->
-                <button  class="small-button" (click)="refresh()" id ="refButtonWrapper" style="margin: 0%;padding:0 "> <i class="glyphicon glyphicon-refresh btn"
-                                                   id="refereshNowButton"></i></button>
+                <button  class="small-button glyphicon glyphicon-refresh" (click)="refresh()" id ="refButtonWrapper" style="font-size: 20px;margin: 0%;padding:5px "> </button>
+                <!--<i class=" btn"                   id="refereshNowButton"></i>-->
                 <!--<button [@flyInOut]='"in"' *ngIf="!left" (click)="animateMe()" id ="refButtonWrapper2" class="glyphicon glyphicon-refresh btn btn-md btn-default "> </button>-->
                 <!--<button id ="refButtonWrapper"> <i class="glyphicon glyphicon-refresh btn btn-md btn-default "-->
                                                    <!--id="refereshNowButton"></i></button>-->
@@ -29,8 +29,8 @@
                 <!--<button href="#myCarousel" data-slide="next" style="margin: 0% "-->
                         <!--class="btn-responsive"><i-->
                   <!--class=" glyphicon glyphicon-chevron-right btn "></i></button>-->
-                <button class="small-button"  (click)="animateMe()" style="margin: 0%;padding:0 " [disabled]="isAbleSlide">
-                  <span  class=" glyphicon glyphicon-chevron-right btn "></span></button>
+                <button class="small-button glyphicon glyphicon-chevron-right "  (click)="animateMe()" style="font-size: 20px;margin: 0%;padding:5px " [disabled]="isAbleSlide">
+                  </button>
               </div>
             </div>
 
