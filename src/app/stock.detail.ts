@@ -20,7 +20,6 @@ import 'rxjs/add/observable/timer';
 import {SimpleChanges, OnChanges} from '@angular/core';
 import {StockData} from './stockData';
 import {SaveData} from './saveData';
-import {OrderByPipe} from './orderby.pipe';
 import {
   FacebookService,
   LoginResponse,
@@ -31,6 +30,7 @@ import {
   InitParams
 } from 'ngx-facebook';
 import {trigger, state, style, transition, animate, keyframes} from '@angular/animations';
+import * as moment from 'moment-timezone';
 declare var jquery: any;
 declare var $: any;
 @Component({
@@ -59,6 +59,8 @@ declare var $: any;
 export class StockDetailComponent implements OnChanges, AfterViewInit {
   @Input() symbol: string;
   @Input() fake_count: number;
+  @Input() fake_count2: number;
+  @Input() ifClear: boolean;
   chart;
   smachart;
   options: Object;
@@ -67,9 +69,11 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   newsfeeds: Newsfeed[] = [];
   ops: Object[] = [];
   tags: boolean[] = [];
+  error_tags: boolean[] = [];
   price_tag: boolean;
-  price_error_tage = false;
+  price_error_tag = false;
   news_tag: boolean;
+  news_error_tag = false;
   symbol_info: SymbolInfo = new SymbolInfo();
   temp_array: number[] = [];
   tag_number = 9;
@@ -82,20 +86,24 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   chosenOption = 'Default';
   chosenOrder = 'Adcending';
   disableOrder = true;
+  isAbleSlide = true;
   checkboxValue = false;
   ifBindToggle = true;
   handle;
   sub: Subscription;
   timer;
   ticks = 0;
+
   constructor(private http: HttpClient, private fb: FacebookService, private cdr: ChangeDetectorRef) {
     // this. testJquery();
+    this.isAbleSlide = true;
     this.options = new Object();
     for (let i = 0; i < 10; i++) {
       this.ops.push(new Object());
     }
     for (let i = 0; i < 10; i++) {
       this.tags.push(false);
+      this.error_tags.push(false);
     }
     this.price_tag = false;
     this.news_tag = false;
@@ -128,24 +136,29 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.symbol_info = this.test(this.symbol);
-    console.log(this.symbol_info.price_array);
-    let timer = Observable.timer(600);
-    timer.subscribe(t => {
-    this.testSMA(0, this.symbol, 'SMA', 1);
-      this.testSMA(1, this.symbol, 'EMA', 1);
-      this.testSTOCH(2, this.symbol, 'STOCH', 2);
-    });
-    let timer2 = Observable.timer(300);
-    timer2.subscribe(t => {
-      this.testSMA(3, this.symbol, 'RSI', 1);
-      this.testThree(6, this.symbol, 'BBANDS', 3);
-      this.testThree(7, this.symbol, 'MACD', 3);
-    });
+    if (this.ifClear) {
+      this.ClickClear();
+    } else {
+      this.symbol_info = this.test(this.symbol);
+      console.log(this.symbol_info.price_array);
+      let timer = Observable.timer(600);
+      timer.subscribe(t => {
+        this.testSMA(0, this.symbol, 'SMA', 1);
+        this.testSMA(1, this.symbol, 'EMA', 1);
+        this.testSTOCH(2, this.symbol, 'STOCH', 2);
+      });
+      let timer2 = Observable.timer(300);
+      timer2.subscribe(t => {
+        this.testSMA(3, this.symbol, 'RSI', 1);
+        this.testThree(6, this.symbol, 'BBANDS', 3);
+        this.testThree(7, this.symbol, 'MACD', 3);
+      });
 
-    this.testSMA(4, this.symbol, 'ADX', 1);
-    this.testSMA(5, this.symbol, 'CCI', 1);
-    this.testNews(this.symbol);
+      this.testSMA(4, this.symbol, 'ADX', 1);
+      this.testSMA(5, this.symbol, 'CCI', 1);
+      this.testNews(this.symbol);
+    }
+
 
   }
 
@@ -160,6 +173,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   // }
   testNews(value: string) {
     this.news_tag = false;
+    this.news_error_tag = false;
     if (value == null) {
       return;
     }
@@ -183,7 +197,9 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         if (item_values[key]['link'][0].includes('article')) {
           const title = item_values[key]['title'][0];
           const link = item_values[key]['link'][0];
-          const date = item_values[key]['pubDate'][0].substr(0, item_values[key]['pubDate'][0].length - 6);
+          // const date = item_values[key]['pubDate'][0].substr(0, item_values[key]['pubDate'][0].length - 6);
+          let date = item_values[key]['pubDate'][0];
+          date = this.formatTimeZone(date, 'US/Eastern');
           const author = item_values[key]['sa:author_name'][0];
           // console.log(item_values[key]['link'][0]);
           console.log(item_values[key]['title'][0]);
@@ -197,15 +213,18 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         }
       }
       this.news_tag = true;
+      this.news_error_tag = false;
     }, err => {
       console.log(value + ' news');
       console.log(err);
+      this.news_error_tag = true;
     });
   }
 
   testThree(option: number, value: string, indicator: string, number: number) {
     console.log(option);
     this.tags[option] = false;
+    this.error_tags[option] = false;
     if (value == null) {
       return;
     }
@@ -320,16 +339,19 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         // }
         // this.addPoint();
         this.tags[option] = true;
+        this.error_tags[option] = false;
       },
       err => {
         console.log(indicator);
         console.log(err);
+        this.error_tags[option] = true;
       });
   }
 
   testSTOCH(option: number, value: string, indicator: string, number: number) {
     console.log(option);
     this.tags[option] = false;
+    this.error_tags[option] = false;
     if (value == null) {
       return;
     }
@@ -436,16 +458,19 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         // }
         // this.addPoint();
         this.tags[option] = true;
+        this.error_tags[option] = false;
       },
       err => {
         console.log(indicator);
         console.log(err);
+        this.error_tags[option] = true;
       });
   }
 
   testSMA(option: number, value: string, indicator: string, number: number) {
     console.log(option);
     this.tags[option] = false;
+    this.error_tags[option] = false;
     if (value == null) {
       return;
     }
@@ -537,6 +562,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         console.log(data_array[0]);
         this.temp_array = data_array[0];
         this.tags[option] = true;
+        this.error_tags[option] = false;
         // for (let i = 0 ; i < number; i++) {
         //   this.chart.addSeries({
         //     data: this.temp_array
@@ -547,17 +573,19 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       err => {
         console.log(indicator);
         console.log(err);
+        this.error_tags[option] = true;
       });
     console.log(this.temp_array);
     // this.addPoint();
   }
 
   test(value: string): SymbolInfo {
-
-    this.price_tag = false;
     if (value == null) {
       return this.symbol_info;
     }
+    this.price_tag = false;
+    this.price_error_tag = false;
+    this.isAbleSlide = false;
     this.ifBindToggle = false;
     value = value.toUpperCase();
     console.log('symbol ' + value);
@@ -572,7 +600,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         console.log(meta);
         const array_values = data['Time Series (Daily)'];
         const symbol = meta['2. Symbol'];
-        const timestamp = meta['3. Last Refreshed'];
+        let timestamp = meta['3. Last Refreshed'];
+        if ( timestamp.length < 12) {
+          timestamp = timestamp + ' 16:00:00';
+        }
         console.log(array_values);
         let open = '';
         let close = '';
@@ -726,10 +757,12 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
           }]
         }
         this.price_tag = true;
+        this.price_error_tag = false;
       },
       err => {
         console.log(value);
         console.log(err);
+        this.price_error_tag = true;
       });
     return this.symbol_info;
   }
@@ -903,6 +936,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
 
   clickSaveSymbol(symbol: string) {
     console.log(symbol + ' ' + this.symbol);
+    this.isAbleSlide = false;
     this.animateMe();
     if (symbol === this.symbol) {
     } else {
@@ -972,9 +1006,9 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     }
   }
   testJquery() {
-    console.log(this.checkboxValue);
-    console.log('testJquery' +
-      '');
+    // console.log(this.checkboxValue);
+    // console.log('testJquery' +
+    //   '');
     if (this.ifBindToggle === false) {
       console.log('ifBindToggle' + false);
       $('#toggle-one').bootstrapToggle();
@@ -1088,13 +1122,35 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     console.log('count');
   }
   isYellowStar(): boolean {
+    // console.log(this.symbol);
     for (let key in this.save_datas) {
-      if (this.save_datas[key].save_name === this.symbol_info.symbol) {
+      if (this.save_datas[key].save_name === this.symbol) {
         // console.log('isYellowStar' + this.symbol_info.symbol);
         return true;
       }
     }
     return false;
+  }
+  formatTimeZone(date, timezone) {
+    let comma = date.indexOf(",");
+    console.log(date);
+    date = date.substring(0, comma) + date.substring(comma + 1);
+    let time = moment.tz(date, timezone).format('ddd, DD MMM YYYY HH:mm:ss');
+    let timeZoneName = moment.tz(date, timezone).format('zz');
+    let newTime = time + ' ' + timeZoneName;
+    console.log(newTime);
+    return newTime;
+  }
+
+  ClickClear() {
+    console.log('clearinner');
+    if (this.symbol == null ) {
+      console.log(this.price_tag);
+    } else {
+      console.log('not null');
+      this.left = true;
+      this.isAbleSlide = true;
+    }
   }
 
 }
