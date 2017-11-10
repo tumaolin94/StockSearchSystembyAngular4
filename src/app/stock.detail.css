@@ -14,3 +14,13 @@
   width:100% !important;
   height:100% !important;
 }
+button[disabled] {
+  cursor: not-allowed;
+}
+.my_table tr:nth-child(even) {
+  background: #FFFFFF;
+}
+
+.my_table tr:nth-child(odd) {
+  background: #F9F9F9;
+}

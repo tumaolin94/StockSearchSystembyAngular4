@@ -181,7 +181,8 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       this.animateMe();
     }
     value = value.toUpperCase();
-    const url = 'http://localhost:3000/news?symbol=' + value;
+    // const url = 'http://localhost:3000/news?symbol=' + value;
+    const url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/news?symbol=' + value;
     console.log(url);
     this.news_tag = false;
     this.http.get(url).subscribe(data => {
@@ -229,7 +230,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       return;
     }
     value = value.toUpperCase();
-    const url = 'http://localhost:3000/indicator?indicator=' + indicator + '&symbol=' + value + '&number=3';
+    const url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/indicator?indicator=' + indicator + '&symbol=' + value + '&number=3';
     // const url = 'http://localhost:3000/test?indicator=' + indicator + '&symbol=' + value + '&number=2';
     console.log(url);
     this.http.get(url).subscribe(data => {
@@ -356,7 +357,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       return;
     }
     value = value.toUpperCase();
-    const url = 'http://localhost:3000/indicator?indicator=' + indicator + '&symbol=' + value + '&number=2';
+    const url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/indicator?indicator=' + indicator + '&symbol=' + value + '&number=2';
     // const url = 'http://localhost:3000/test?indicator=' + indicator + '&symbol=' + value + '&number=2';
     console.log(url);
     this.http.get(url).subscribe(data => {
@@ -475,7 +476,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       return;
     }
     value = value.toUpperCase();
-    const url = 'http://localhost:3000/indicator?indicator=' + indicator + '&symbol=' + value + '&number=1';
+    const url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/indicator?indicator=' + indicator + '&symbol=' + value + '&number=1';
     console.log(url);
     this.http.get(url).subscribe(data => {
         console.log(data);
@@ -589,7 +590,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     this.ifBindToggle = false;
     value = value.toUpperCase();
     console.log('symbol ' + value);
-    const url = `http://localhost:3000/symbol?symbol=` + value;
+    const url = `http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/symbol?symbol=` + value;
     // const url = 'http://localhost:3000/testsymbol';
     console.log(url);
     this.http.get(url).subscribe(data => {
@@ -795,6 +796,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     } else {
       dataString = encodeURI('async=false&type=jpeg&width=600&options=' + JSON.stringify(this.ops[this.tag_number]));
     }
+    // const exportUrl = 'http://localhost:3000/fb';
     const exportUrl = 'http://export.highcharts.com/';
     // console.log(exportUrl);
     // console.log(dataString);
@@ -1027,7 +1029,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     console.log('before refresh');
     console.log(this.save_datas);
     for (let i in this.save_datas) {
-      const url = `http://localhost:3000/symbol?symbol=` + this.save_datas[i].save_name;
+      const url = `http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/symbol?symbol=` + this.save_datas[i].save_name;
       // const url = 'http://localhost:3000/testsymbol';
       console.log(url);
     this.refreshData(i, url);
@@ -1063,7 +1065,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         const temp_change = (parseFloat(close) - pre_close);
         this.save_datas[index].save_change = parseFloat(temp_change.toFixed(2));
         this.save_datas[index].save_change_per = parseFloat((temp_change / pre_close * 100).toFixed(2));
-        this.save_datas[index].save_price = parseFloat(close);
+        this.save_datas[index].save_price = parseFloat(close).toFixed(2);
         this.save_datas[index].save_volume = parseInt(volume);
         this.save_datas[index].save_new_volume = volume.replace(/\B(?=(?:\d{3})+\b)/g, ',');
         console.log('refresh ' + this.save_datas[index].save_name);

@@ -5,11 +5,10 @@
 .symbolLabel{
   color:red;
 }
-.searchContainer {
-  margin-top :4%;
-  background-color: white;
-  padding-bottom :1%;
-}
+/*.searchContainer {*/
+  /*margin-top :4%;*/
+  /*background-color: white;*/
+/*}*/
 .row {
   margin-left: -15px;margin-right: -15px;
 }
@@ -40,4 +39,41 @@ chart {
 .progress{
   margin-top: 4%;
 }
+.errormassage {
+  margin-top: 4%;
+}
+button[disabled] {
+  cursor: not-allowed;
+}
+.my_table tr:nth-child(even) {
+  background: #FFFFFF;
+}
+
+.my_table tr:nth-child(odd) {
+  background: #F9F9F9;
+}
+@media all and (min-width: 768px){
+  .hidden-mobile{display:inline;}
+
+  .my-container{
+    width: 80%;
+    margin: 0px auto;
+  }
+}
+
+@media all and (min-width: 321px) and (max-width: 767px){
+  .hidden-mobile{display:none;}
+
+  .my-container{
+    width: 94%;
+    margin: 0px auto;
+  }
+  .small-select{
+    width: 70%; margin-left:5%; float:left
+  }
+  .small-button{
+    font-size: 0.9em;
+  }
+}
+
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';

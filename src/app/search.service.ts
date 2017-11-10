@@ -3,7 +3,6 @@ import { Http } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-
 import {Autodata} from './autoData';
 @Injectable()
 export class SearchService {
@@ -18,7 +17,8 @@ export class SearchService {
   }
   search2(term: string): Observable<Autodata[]> {
     console.log(term);
-    const url = `http://localhost:3000/auto?input=` + term ;
+    const url = `http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/auto?input=` + term ;
+    // const url = `http://localhost:3000/auto?input=` + term ;
     console.log(url);
     // this.http.get(url).subscribe(data => {
     //   // Read the result field from the JSON response.
@@ -31,4 +31,6 @@ export class SearchService {
       .map(data => data as Autodata[]);
 
   }
+
+
 }

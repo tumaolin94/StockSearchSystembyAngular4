@@ -1,5 +1,5 @@
 <div data-role="page">
-  <div  class=" container searchContainer" id="searchContainer">
+  <div  class="well container searchContainer my-container" id="searchContainer">
     <h4 class="searchHeader">Stock Market Search</h4>
     <form [formGroup]="form" (ngSubmit)="onSubmit(symbol.value)">
       <div class="row">
@@ -7,7 +7,8 @@
           Enter Stock Ticker Symbol:<span class="symbolLabel"> *</span>
         </div>
         <div class="col-md-6">
-          <div class="form-group" [ngClass]="{ 'has-error' : symbol.touched && symbol.invalid}">
+          <div class="form-group" [ngClass]="{ 'has-error' : symbol.touched && (symbol.invalid || !myValidate)}">
+          <!--<div class="form-group" [ngClass]="{ 'has-error' : symbol.touched && symbol.invalid}">-->
               <input class="form-control" id="symbol" name="symbol" placeholder="e.g. AAPL"
                      [(ngModel)]="symbol_text" #searchBox
                      formControlName="symbol"  required   [matAutocomplete]="auto" (keyup)="search(searchBox.value)">
@@ -15,10 +16,10 @@
 
         </div>
         <div class="col-md-3">
-          <button type="submit" class="btn btn-primary" id="getQuote" [disabled]="symbol.invalid">
+          <button type="submit" class="btn btn-primary" id="getQuote" [disabled]="symbol.invalid||!myValidate">
             <span class="glyphicon glyphicon-search"> </span> Get Quote
           </button>
-          <button type="button" class="btn" id="clearButton" >
+          <button type="button" class="btn" id="clearButton" (click)="ClickClear()">
             <span class="glyphicon glyphicon-refresh"></span> Clear
           </button>
         </div>
@@ -27,7 +28,7 @@
         <div class="col-md-3">
         </div>
         <div class="col-md-6">
-          <span *ngIf="symbol.touched && symbol.invalid">Please enter a stock ticker symbol.</span>
+          <span *ngIf="symbol.touched && !myValidate">Please enter a stock ticker symbol.</span>
         </div>
 
       </div>
@@ -46,8 +47,8 @@
       </mat-option>
     </mat-autocomplete>
   </div>
-  <div class="container">
+  <div class="container my-container">
     <hr>
   </div>
-  <stock-detail [symbol]="symbol_value" [fake_count] = "fake_count"></stock-detail>
+  <stock-detail [symbol]="symbol_value" [fake_count] = "fake_count" [fake_count2] = "fake_count2" [ifClear] = "ifClear"></stock-detail>
 </div>

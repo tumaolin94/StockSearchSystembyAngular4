@@ -14,7 +14,9 @@ import { ChartModule } from 'angular2-highcharts';
 import { PriceVolumeComponent } from './price.value.component';
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import { FacebookModule } from 'ngx-facebook';
-declare var require: any;
+import { OrderModule } from 'ngx-order-pipe';
+import { MomentModule } from 'angular2-moment';
+declare let require: any;
 export function highchartsFactory() {
   const hc = require('highcharts/highstock');
   const dd = require('highcharts/modules/exporting');
@@ -38,8 +40,10 @@ export function highchartsFactory() {
     HttpModule,
     JsonpModule,
     HttpClientModule,
-    ChartModule.forRoot(require('highcharts')),
+    ChartModule,
     FacebookModule.forRoot(),
+    OrderModule,
+    MomentModule
   ],
   providers: [{
     provide: HighchartsStatic,

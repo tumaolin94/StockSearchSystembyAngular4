@@ -10,6 +10,7 @@ export class SymbolInfo {
   low: string;
   range: string;
   volume: string;
+  new_volume: string;
   price_array: number[] = [];
   volume_array: number[] = [];
   date: string[] = [];
