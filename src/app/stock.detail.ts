@@ -275,6 +275,28 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         }
         // let temp_options: Object = this.smaOptions;
         this.ops[option] = {
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 500
+              },
+              chartOptions: {
+                xAxis: {
+                  categories: date,
+                  tickInterval: 15,
+                  tickPositioner: function () {
+                    let res = [];
+                    for (let i = 0; i < this.categories.length; i++) {
+                      if (i % 15 === 0) {
+                        res.push(this.categories.length - i - 1);
+                      }
+                    }
+                    return res;
+                  }
+                }
+              }
+            }]
+          },
           chart: {
             zoomType: 'x'
           },
@@ -402,6 +424,28 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         }
         // let temp_options: Object = this.smaOptions;
         this.ops[option] = {
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 500
+              },
+              chartOptions: {
+                xAxis: {
+                  categories: date,
+                  tickInterval: 15,
+                  tickPositioner: function () {
+                    let res = [];
+                    for (let i = 0; i < this.categories.length; i++) {
+                      if (i % 15 === 0) {
+                        res.push(this.categories.length - i - 1);
+                      }
+                    }
+                    return res;
+                  }
+                }
+              }
+            }]
+          },
           chart: {
             zoomType: 'x'
           },
@@ -520,6 +564,28 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         }
         // let temp_options: Object = this.smaOptions;
         this.ops[option] = {
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 500
+              },
+              chartOptions: {
+                xAxis: {
+                  categories: date,
+                  tickInterval: 15,
+                  tickPositioner: function () {
+                    let res = [];
+                    for (let i = 0; i < this.categories.length; i++) {
+                      if (i % 15 === 0) {
+                        res.push(this.categories.length - i - 1);
+                      }
+                    }
+                    return res;
+                  }
+                }
+              }
+            }]
+          },
           chart: {
             zoomType: 'x'
           },
@@ -676,6 +742,28 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         console.log(this.symbol_info.price_array);
         const charTitle = symbol + ' Stock Price and Volume';
         this.options = {
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 500
+              },
+              chartOptions: {
+                xAxis: {
+                  categories: date,
+                  tickInterval: 15,
+                  tickPositioner: function () {
+                    let res = [];
+                    for (let i = 0; i < this.categories.length; i++) {
+                      if (i % 15 === 0) {
+                        res.push(this.categories.length - i - 1);
+                      }
+                    }
+                    return res;
+                  }
+                }
+              }
+            }]
+          },
           chart: {
             // Explicitly tell the width and height of a chart
             width: null,
@@ -900,6 +988,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     if (this.state === 'first') {
       this.state = 'in';
     }
+    this.tag_number = 9;
     this.ifBindToggle = false;
     console.log('animateMe');
     this.left = (this.left ? false : true);
@@ -962,6 +1051,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     this.animateMe();
     if (symbol === this.symbol) {
     } else {
+      this.tag_number = 9;
       this.symbol = symbol;
       this.test(symbol);
       let timer = Observable.timer(600);
@@ -1166,6 +1256,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   }
 
   ClickClear() {
+    this.tag_number = 9;
     console.log('clearinner');
     if (this.symbol == null ) {
       console.log(this.price_tag);

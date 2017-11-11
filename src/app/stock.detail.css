@@ -24,6 +24,9 @@ button[disabled] {
 .my_table tr:nth-child(odd) {
   background: #F9F9F9;
 }
-.toggle {
+.toggle .onoffswitch-checkbox{
   margin-bottom: 5px;
+}
+.detail_wrapper{
+  width: 95%;
 }

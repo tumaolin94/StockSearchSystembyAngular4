@@ -1,5 +1,5 @@
 <div data-role="page">
-  <div  class="well container searchContainer my-container" id="searchContainer">
+  <div  class="well container searchContainer my-container" id="searchContainer" style="padding-bottom: 2%">
     <h4 class="searchHeader">Stock Market Search</h4>
     <form [formGroup]="form" (ngSubmit)="onSubmit(symbol.value)">
       <div class="row">
@@ -15,6 +15,9 @@
           </div>
 
         </div>
+        <div class="col-md-3 visible-xs">
+          <span *ngIf="symbol.touched && !myValidate">&nbsp;&nbsp;Please enter a stock ticker symbol.</span>
+        </div>
         <div class="col-md-3">
           <button type="submit" class="btn btn-primary" id="getQuote" [disabled]="symbol.invalid||!myValidate">
             <span class="glyphicon glyphicon-search"> </span> Get Quote
@@ -27,7 +30,7 @@
       <div class="row">
         <div class="col-md-3">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 hidden-xs">
           <span *ngIf="symbol.touched && !myValidate">Please enter a stock ticker symbol.</span>
         </div>
 

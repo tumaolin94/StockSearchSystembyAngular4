@@ -17,7 +17,7 @@
                   Automatic Refersh:</label>
                 <input class="onoffswitch-checkbox " [(ngModel)]="checkboxValue"  id="toggle-one" type="checkbox" data-toggle="toggle" >
                 <!--<input class="onoffswitch-checkbox" id="toggle-one" type="checkbox" data-toggle="toggle" >-->
-                <button  class="small-button glyphicon glyphicon-refresh" (click)="refresh()" id ="refButtonWrapper" style="font-size: 20px;margin: 0%;padding:5px "> </button>
+                <button  class="small-button glyphicon glyphicon-refresh" (click)="refresh()" id ="refButtonWrapper" style="font-size: 20px;margin: 0%;padding:5px ;vertical-align:bottom "> </button>
                 <!--<i class=" btn"                   id="refereshNowButton"></i>-->
                 <!--<button [@flyInOut]='"in"' *ngIf="!left" (click)="animateMe()" id ="refButtonWrapper2" class="glyphicon glyphicon-refresh btn btn-md btn-default "> </button>-->
                 <!--<button id ="refButtonWrapper"> <i class="glyphicon glyphicon-refresh btn btn-md btn-default "-->
@@ -29,7 +29,7 @@
                 <!--<button href="#myCarousel" data-slide="next" style="margin: 0% "-->
                         <!--class="btn-responsive"><i-->
                   <!--class=" glyphicon glyphicon-chevron-right btn "></i></button>-->
-                <button class="small-button glyphicon glyphicon-chevron-right "  (click)="animateMe()" style="font-size: 20px;margin: 0%;padding:5px " [disabled]="isAbleSlide">
+                <button class="small-button glyphicon glyphicon-chevron-right "  (click)="animateMe()" style="font-size: 20px;margin: 0%;padding:5px ;vertical-align:bottom " [disabled]="isAbleSlide">
                   </button>
               </div>
             </div>
@@ -154,7 +154,7 @@
                           <i
                             class="glyphicon glyphicon-star"
                             id="starElement"
-                            style="width: 20px; height: 20px; margin-top:4px;color: yellow"  ></i>
+                            style="width: 20px; height: 20px; margin-top:4px;color: #FDD445"  ></i>
                         </button>
                         <button [disabled]="!isFBVaild()" (click)="share()" style="background-color: white;border: 1px solid #e7e7e7;width: 35px; height: 35px; padding: 0" class="btn btn-outline-secondary" id="fb">
                           <img src="http://cs-server.usc.edu:45678/hw/hw8/images/facebook.png"
@@ -165,49 +165,49 @@
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="!price_tag && !price_error_tag" class="progress">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+                  <div *ngIf="!price_tag && !price_error_tag" class="progress" style="margin-top: 70px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"></div>
                   </div>
-                  <div *ngIf="price_tag && !price_error_tag" style="width: 100%; padding-right: 0;padding-left: 0; margin-top: 8%" class="container">
+                  <div *ngIf="price_tag && !price_error_tag" style="width: 100%; padding-right: 0;padding-left: 0; margin-top: 8.5%;font-size: 1.1em;" class="container">
                     <table class="table table-striped">
                       <tbody>
-                      <tr>
-                        <th>Stock Ticker Symol</th>
-                        <td>{{symbol_info.symbol}}</td>
+                      <tr class="tr-chartable">
+                        <th class="th-chartable">Stock Ticker Symol</th>
+                        <td class="th-chartable">{{symbol_info.symbol}}</td>
                       </tr>
-                      <tr>
-                        <th>Last Price</th>
-                        <td>{{symbol_info.close}}</td>
+                      <tr class="tr-chartable">
+                        <th class="th-chartable">Last Price</th>
+                        <td class="th-chartable">{{symbol_info.close}}</td>
                       </tr>
-                      <tr>
-                        <th>Change(Change Percent)</th>
-                        <td *ngIf="symbol_info.change >= 0" style="color: green">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Green_Arrow_Up.png' alt='up' width='15' height='15'></td>
-                        <td *ngIf="symbol_info.change < 0" style="color: red">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Red_Arrow_Down.png' alt='up' width='15' height='15'></td>
+                      <tr class="tr-chartable">
+                        <th class="th-chartable">Change(Change Percent)</th>
+                        <td *ngIf="symbol_info.change >= 0" class="th-chartable">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Green_Arrow_Up.png' alt='up' width='15' height='15'></td>
+                        <td *ngIf="symbol_info.change < 0" class="th-chartable">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Red_Arrow_Down.png' alt='up' width='15' height='15'></td>
                       </tr>
-                      <tr>
-                        <th>Timestamp</th>
-                        <td>{{symbol_info.timestamp}}  EST</td>
+                      <tr class="tr-chartable">
+                        <th class="th-chartable">Timestamp</th>
+                        <td class="th-chartable">{{symbol_info.timestamp}}  EST</td>
                       </tr>
-                      <tr>
-                        <th>Open</th>
-                        <td>{{symbol_info.open}}</td>
+                      <tr class="tr-chartable">
+                        <th class="th-chartable">Open</th>
+                        <td class="th-chartable">{{symbol_info.open}}</td>
                       </tr>
-                      <tr>
-                        <th>Close</th>
-                        <td>{{symbol_info.close}}</td>
+                      <tr class="tr-chartable">
+                        <th class="th-chartable">Close</th>
+                        <td class="th-chartable">{{symbol_info.close}}</td>
                       </tr>
-                      <tr>
-                        <th>Day's Range</th>
-                        <td>{{symbol_info.range}}</td>
+                      <tr class="tr-chartable">
+                        <th class="th-chartable">Day's Range</th>
+                        <td class="th-chartable">{{symbol_info.range}}</td>
                       </tr>
-                      <tr>
-                        <th>Volume</th>
-                        <td>{{symbol_info.new_volume}}</td>
+                      <tr class="tr-chartable">
+                        <th class="th-chartable">Volume</th>
+                        <td class="th-chartable">{{symbol_info.new_volume}}</td>
                       </tr>
                       </tbody>
                     </table>
                   </div>
-                  <div class="alert alert-danger" role="alert" *ngIf="price_error_tag" style="margin-top: 8%">Error! Failed to get current stock data.</div>
+                  <div class="alert alert-danger" role="alert" *ngIf="price_error_tag" style="margin-top: 100px">Error! Failed to get current stock data.</div>
                 </div>
                 <div class="col-md-6" >
                   <div>
@@ -232,7 +232,7 @@
                         <chart  [options]="options">
                         </chart>
                       </div>
-                      <div class="alert alert-danger" role="alert" *ngIf="price_error_tag">Error! Failed to get price data.</div>
+                      <div class="alert alert-danger" role="alert" *ngIf="price_error_tag" style="margin-top: 50px">Error! Failed to get price data.</div>
                     </div>
                     <div id="indicator_SMA" class="tab-pane fade">
                       <div *ngIf="!tags[0] && !error_tags[0]" class="progress">
@@ -242,7 +242,7 @@
                         <chart  [options]="ops[0]" (load)="saveChart($event.context)">
                         </chart>
                       </div>
-                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[0]">Error! Failed to get SMA data.</div>
+                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[0]" style="margin-top: 50px">Error! Failed to get SMA data.</div>
                     </div>
                     <div id="indicator_EMA" class="tab-pane fade">
                       <div *ngIf="!tags[1]&& !error_tags[1]" class="progress">
@@ -252,7 +252,7 @@
                         <chart  [options]="ops[1]" >
                         </chart>
                       </div>
-                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[1]">Error! Failed to get SMA data.</div>
+                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[1]" style="margin-top: 50px">Error! Failed to get EMA data.</div>
                     </div>
                     <div id="indicator_STOCH" class="tab-pane fade">
                       <div *ngIf="!tags[2] && !error_tags[2]" class="progress">
@@ -272,7 +272,7 @@
                         <chart  [options]="ops[3]" >
                         </chart>
                       </div>
-                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[3]">Error! Failed to get RSI data.</div>
+                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[3]" style="margin-top: 50px">Error! Failed to get RSI data.</div>
                     </div>
                     <div id="indicator_ADX" class="tab-pane fade">
                       <div *ngIf="!tags[4]&&!error_tags[4]" class="progress">
@@ -282,7 +282,7 @@
                         <chart  [options]="ops[4]" >
                         </chart>
                       </div>
-                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[4]">Error! Failed to get ADX data.</div>
+                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[4]" style="margin-top: 50px">Error! Failed to get ADX data.</div>
                     </div>
                     <div id="indicator_CCI" class="tab-pane fade">
                       <div *ngIf="!tags[5]&&!error_tags[5]" class="progress">
@@ -292,7 +292,7 @@
                         <chart  [options]="ops[5]" >
                         </chart>
                       </div>
-                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[5]">Error! Failed to get CCI data.</div>
+                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[5]" style="margin-top: 50px">Error! Failed to get CCI data.</div>
                     </div>
                     <div id="indicator_BBANDS" class="tab-pane fade">
                       <div *ngIf="!tags[6]&& !error_tags[6]" class="progress">
@@ -302,7 +302,7 @@
                         <chart  [options]="ops[6]" >
                         </chart>
                       </div>
-                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[6]">Error! Failed to get BBANDS data.</div>
+                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[6]" style="margin-top: 50px">Error! Failed to get BBANDS data.</div>
                     </div>
                     <div id="indicator_MACD" class="tab-pane fade">
                       <div *ngIf="!tags[7] && !error_tags[7]" class="progress">
@@ -312,7 +312,7 @@
                         <chart  [options]="ops[7]" >
                         </chart>
                       </div>
-                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[7]">Error! Failed to get MACD data.</div>
+                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[7]" style="margin-top: 50px">Error! Failed to get MACD data.</div>
                     </div>
                   </div>
                 </div>

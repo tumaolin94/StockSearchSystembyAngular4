@@ -33,6 +33,7 @@ body
  min-height:100% !important;
 
 }
+
 chart {
   display: block;
 }
@@ -58,6 +59,12 @@ button[disabled] {
   .my-container{
     width: 80%;
     margin: 0px auto;
+  }
+  .th-chartable {
+    vertical-align: middle
+  }
+  .tr-chartable {
+    height:50px;
   }
 }
 

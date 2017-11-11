@@ -15,3 +15,6 @@ body {
 .example-full-width {
   width: 100%;
 }
+.form-group {
+  margin-bottom: 0;
+}
