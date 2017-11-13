@@ -35,8 +35,8 @@ declare var jquery: any;
 declare var $: any;
 @Component({
   selector: 'stock-detail',
-  templateUrl: './stock.detail.html',
-  styleUrls: ['./stock.detail.css'],
+  templateUrl: './stock.detail.component.html',
+  styleUrls: ['./stock.detail.component.css'],
   animations: [
     trigger('rightToright', [
       state('in', style({transform: 'translateX(0)'})),
@@ -234,6 +234,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     // const url = 'http://localhost:3000/test?indicator=' + indicator + '&symbol=' + value + '&number=2';
     console.log(url);
     this.http.get(url).subscribe(data => {
+        if (data == null || !data.hasOwnProperty('Meta Data')) {
+          this.error_tags[option] = true;
+          return;
+        }
         console.log(data);
         let meta = data['Meta Data'];
         let symbol = meta['1: Symbol'];
@@ -383,6 +387,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     // const url = 'http://localhost:3000/test?indicator=' + indicator + '&symbol=' + value + '&number=2';
     console.log(url);
     this.http.get(url).subscribe(data => {
+        if (data == null || !data.hasOwnProperty('Meta Data')) {
+          this.error_tags[option] = true;
+          return;
+        }
         console.log(data);
         let meta = data['Meta Data'];
         let symbol = meta['1: Symbol'];
@@ -523,6 +531,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     const url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/indicator?indicator=' + indicator + '&symbol=' + value + '&number=1';
     console.log(url);
     this.http.get(url).subscribe(data => {
+        if (data == null || !data.hasOwnProperty('Meta Data')) {
+          this.error_tags[option] = true;
+          return;
+        }
         console.log(data);
         let meta = data['Meta Data'];
         let symbol = meta['1: Symbol'];
@@ -662,6 +674,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     this.http.get(url).subscribe(data => {
         // Read the result field from the JSON response.
         console.log(data);
+        if ( data.hasOwnProperty('Error Message')) {
+          this.price_error_tag = true;
+          return;
+        }
         const meta = data['Meta Data'];
         console.log('meta');
         console.log(meta);

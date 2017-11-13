@@ -16,7 +16,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 
-import { StockDetailComponent } from './stock.detail';
+import { StockDetailComponent } from './stock.detail.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,23 +24,22 @@ import { StockDetailComponent } from './stock.detail';
   providers: [SearchService, StockDetailComponent]
 })
 export class AppComponent implements OnInit {
-  symbol_value: String;
-  fake_count: number;
-  fake_count2: number;
-  ifClear = false;
-  private headers = new Headers({'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin' : '*'});
-  symbol_text;
+  symbol_value: String; /* value of symbol changed in input area*/
+  symbol_text;          /* double bind ngmodel*/
+  fake_count: number;   /* signal to stock.detail.component*/
+  fake_count2: number;  /* second signal to stock.detail.component*/
+  ifClear = false;    /* if click clear button*/
+  autodatas: Observable<Autodata[]>;
+  testData: Autodata[] = [] ;
+  private searchTerms = new Subject<string>();
+  myValidate = false;
+
   form = new FormGroup({
     symbol: new FormControl('', [
       Validators.required,
     ]),
   });
   get symbol(): any { return this.form.get('symbol'); }
-  autodatas: Observable<Autodata[]>;
-  testData: Autodata[] = [] ;
-  private searchTerms = new Subject<string>();
-  myValidate = false;
   constructor(private http: HttpClient, private searchService: SearchService, private stockdetail: StockDetailComponent) {
     this.fake_count = 0;
   }

@@ -36,13 +36,6 @@
 
       </div>
     </form>
-    <!--<p>Name控件的valid状态：{{symbol.valid}} - 表示控件有效</p>-->
-    <!--<p>Name控件的invalid状态：{{symbol.invalid}} - 表示控件无效</p>-->
-    <!--<p>Name控件的pristine状态：{{symbol.pristine}} - 表示控件值未改变</p>-->
-    <!--<p>Name控件的dirty状态：{{symbol.dirty}} - 表示控件值已改变</p>-->
-    <!--<p>Name控件的touched状态：{{symbol.touched}} - 表示控件已被访问过</p>-->
-    <!--<p>Name控件的untouched状态：{{symbol.untouched}} - 表示控件未被访问过</p>-->
-    <!--<p>{{searchBox.value}}</p>-->
 
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option *ngFor="let data of autodatas | async" [value]="data.Symbol">

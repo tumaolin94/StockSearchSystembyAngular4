@@ -15,7 +15,7 @@ import { SimpleChanges, OnChanges } from '@angular/core';
 @Component({
   selector: 'app-price',
   templateUrl: './price.value.component.html',
-  // styleUrls: ['./stock.detail.css'],
+  // styleUrls: ['./stock.detail.component.css'],
   // providers: [SearchService]
 })
 

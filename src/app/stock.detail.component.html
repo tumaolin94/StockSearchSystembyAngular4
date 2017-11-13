@@ -144,7 +144,7 @@
                     <div style="float:left; font-weight: bold">Stock Details</div>
                     <div style="float:right; text-align: right">
                       <div class="icon_wrap">
-                        <button  *ngIf="!isYellowStar()" (click)="bookmark()" style="background-color: white;border: 1px solid #e7e7e7;width: 35px; height: 35px;padding: 0" class="btn btn-outline-secondary" id="starBat">
+                        <button  *ngIf="!isYellowStar()" [disabled]="!isFBVaild()" (click)="bookmark()" style="background-color: white;border: 1px solid #e7e7e7;width: 35px; height: 35px;padding: 0" class="btn btn-outline-secondary" id="starBat">
                           <i
                             class="glyphicon glyphicon-star-empty"
                             id="starElement"
@@ -262,7 +262,7 @@
                         <chart  [options]="ops[2]" >
                         </chart>
                       </div>
-                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[2]">Error! Failed to get STOCH data.</div>
+                      <div class="alert alert-danger errormassage" role="alert" *ngIf="error_tags[2]" style="margin-top: 50px">Error! Failed to get STOCH data.</div>
                     </div>
                     <div id="indicator_RSI" class="tab-pane fade">
                       <div *ngIf="!tags[3] && !error_tags[3]" class="progress">

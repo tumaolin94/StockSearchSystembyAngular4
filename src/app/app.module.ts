@@ -9,7 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import {JsonpModule, Jsonp, Response} from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
-import { StockDetailComponent } from './stock.detail';
+import { StockDetailComponent } from './stock.detail.component';
 import { ChartModule } from 'angular2-highcharts';
 import { PriceVolumeComponent } from './price.value.component';
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
