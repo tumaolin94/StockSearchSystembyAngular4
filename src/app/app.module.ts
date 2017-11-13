@@ -11,7 +11,6 @@ import {JsonpModule, Jsonp, Response} from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { StockDetailComponent } from './stock.detail.component';
 import { ChartModule } from 'angular2-highcharts';
-import { PriceVolumeComponent } from './price.value.component';
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import { FacebookModule } from 'ngx-facebook';
 import { OrderModule } from 'ngx-order-pipe';
@@ -27,7 +26,6 @@ export function highchartsFactory() {
   declarations: [
     AppComponent,
     StockDetailComponent,
-    PriceVolumeComponent
   ],
   imports: [
     BrowserModule,

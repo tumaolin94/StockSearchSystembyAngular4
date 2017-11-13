@@ -59,7 +59,6 @@ declare var $: any;
 export class StockDetailComponent implements OnChanges, AfterViewInit {
   @Input() symbol: string;
   @Input() fake_count: number;
-  @Input() fake_count2: number;
   @Input() ifClear: boolean;
   chart;
   smachart;

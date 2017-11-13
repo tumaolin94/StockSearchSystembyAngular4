@@ -27,12 +27,10 @@ export class AppComponent implements OnInit {
   symbol_value: String; /* value of symbol changed in input area*/
   symbol_text;          /* double bind ngmodel*/
   fake_count: number;   /* signal to stock.detail.component*/
-  fake_count2: number;  /* second signal to stock.detail.component*/
   ifClear = false;    /* if click clear button*/
-  autodatas: Observable<Autodata[]>;
-  testData: Autodata[] = [] ;
-  private searchTerms = new Subject<string>();
-  myValidate = false;
+  autodatas: Observable<Autodata[]>; /* arrays of autocomplete data*/
+  myValidate = false; /* if input validate*/
+  private searchTerms = new Subject<string>(); /* new Subject to get search box change*/
 
   form = new FormGroup({
     symbol: new FormControl('', [
@@ -44,7 +42,11 @@ export class AppComponent implements OnInit {
     this.fake_count = 0;
   }
 
-  search(term: string): void {
+  /*
+  * search function
+  * @param {string} symbol value of input box
+  * */
+  search(value: string): void {
     length = this.symbol.value.replace(/\s/g, '').length;
     console.log(length);
     if (length === 0) {
@@ -52,7 +54,7 @@ export class AppComponent implements OnInit {
     } else {
       this.myValidate = true;
     }
-      this.searchTerms.next(term);
+      this.searchTerms.next(value);
   }
 
   ngOnInit(): void {
@@ -70,14 +72,21 @@ export class AppComponent implements OnInit {
       });
   }
 
+  /*
+   * click Get Quote button
+   * @param {string} symbol value of input box
+   * */
   onSubmit(value: string): void {
     this.ifClear = false;
     console.log(value);
     this.symbol_value = value.toUpperCase();
     this.fake_count++;
     this.stockdetail.price_tag = false;
-    // this.stockdetail.test(value);
   }
+  /*
+  * judge if input is validated
+  * @return {boolean} iif input is validated for more than one space
+  * */
   isDisable(): boolean {
     length = this.symbol.value.replace(/\s/g, '').length;
     console.log(length);
@@ -86,6 +95,9 @@ export class AppComponent implements OnInit {
     }
     return false;
   }
+  /*
+   * click clear button
+   * */
   ClickClear() {
     console.log('clear');
     this.symbol.reset();
