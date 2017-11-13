@@ -61,40 +61,35 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   @Input() fake_count: number;
   @Input() ifClear: boolean;
   chart;
-  smachart;
-  options: Object;
-  highStockoptions: Object;
-  smaOptions: Object;
-  newsfeeds: Newsfeed[] = [];
-  ops: Object[] = [];
-  tags: boolean[] = [];
-  error_tags: boolean[] = [];
-  price_tag: boolean;
-  price_error_tag = false;
-  news_tag: boolean;
-  news_error_tag = false;
-  symbol_info: SymbolInfo = new SymbolInfo();
-  temp_array: number[] = [];
-  tag_number = 9;
-  // Annimation Sliding
-  state: string = 'first';
-  left: boolean = true;
-  myStorage = window.localStorage;
-  save_symbol;
-  save_datas: SaveData[];
-  chosenOption = 'Default';
-  chosenOrder = 'Adcending';
-  disableOrder = true;
-  isAbleSlide = true;
-  checkboxValue = false;
-  ifBindToggle = true;
-  handle;
-  sub: Subscription;
-  timer;
-  ticks = 0;
+  options: Object; /* options of Price and Volume chart */
+  highStockoptions: Object; /* options of highStock */
+  newsfeeds: Newsfeed[] = []; /* arrays of newsfeed */
+  ops: Object[] = []; /* arrays of options for indicator charts */
+  tags: boolean[] = []; /* arrays of tags, if get data successfully */
+  error_tags: boolean[] = []; /* arrays of error_tags, if get data unsuccessfully*/
+  price_tag: boolean; /* if get price data successfully */
+  price_error_tag = false; /* if get price data unsuccessfully */
+  news_tag: boolean; /* if get news data successfully */
+  news_error_tag = false; /* if get news data unsuccessfully */
+  symbol_info: SymbolInfo = new SymbolInfo(); /* completed symbol information*/
+  temp_array: number[] = []; /*an temp array*/
+  tag_number = 9; /* current number of tags*/
+  state: string = 'first'; /* initialize annimation sliding state*/
+  left: boolean = true; /* judge slide direction, true -> from left, false -> from right*/
+  myStorage = window.localStorage; /* local storage */
+  save_symbol; /* saving symbol's name */
+  save_datas: SaveData[]; /* datas of save_symbol */
+  chosenOption = 'Default'; /*order options*/
+  chosenOrder = 'Adcending';/* Adcending or descending */
+  disableOrder = true; /* if can excute sort*/
+  isAbleSlide = true; /* if able to slide*/
+  checkboxValue = false; /* auto fresh state*/
+  ifBindToggle = true; /* binding toggle every time change to favorite list*/
+  sub: Subscription; /* Subscription */
+  timer; /* timer */
 
   constructor(private http: HttpClient, private fb: FacebookService, private cdr: ChangeDetectorRef) {
-    // this. testJquery();
+    // this. bindToggle();
     this.isAbleSlide = true;
     this.options = new Object();
     for (let i = 0; i < 10; i++) {
@@ -142,35 +137,30 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       console.log(this.symbol_info.price_array);
       let timer = Observable.timer(600);
       timer.subscribe(t => {
-        this.testSMA(0, this.symbol, 'SMA', 1);
-        this.testSMA(1, this.symbol, 'EMA', 1);
-        this.testSTOCH(2, this.symbol, 'STOCH', 2);
+        this.fetchOnelinedata(0, this.symbol, 'SMA', 1);
+        this.fetchOnelinedata(1, this.symbol, 'EMA', 1);
+        this.fetchTwolinedata(2, this.symbol, 'STOCH', 2);
       });
       let timer2 = Observable.timer(300);
       timer2.subscribe(t => {
-        this.testSMA(3, this.symbol, 'RSI', 1);
-        this.testThree(6, this.symbol, 'BBANDS', 3);
-        this.testThree(7, this.symbol, 'MACD', 3);
+        this.fetchOnelinedata(3, this.symbol, 'RSI', 1);
+        this.fetchThreelinedata(6, this.symbol, 'BBANDS', 3);
+        this.fetchThreelinedata(7, this.symbol, 'MACD', 3);
       });
 
-      this.testSMA(4, this.symbol, 'ADX', 1);
-      this.testSMA(5, this.symbol, 'CCI', 1);
-      this.testNews(this.symbol);
+      this.fetchOnelinedata(4, this.symbol, 'ADX', 1);
+      this.fetchOnelinedata(5, this.symbol, 'CCI', 1);
+      this.fetchNews(this.symbol);
     }
 
 
   }
 
-  // getOption(indicator: String): Object {
-  //   return this.smaOptions;
-  // }
-  // testIncluding() {
-  //   this.testSMA(this.smaOptions, this.symbol, 'SMA', 1);
-  //     // console.log(this.temp_array);
-  //     // this.addPoint();
-  //
-  // }
-  testNews(value: string) {
+  /*
+  * fetch news feed
+  * @param {string} value, symbol name
+  * */
+  fetchNews(value: string) {
     this.news_tag = false;
     this.news_error_tag = false;
     if (value == null) {
@@ -193,23 +183,16 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       console.log(item_values);
       let count = 0;
       for (let key in item_values) {
-        // console.log(item_values[key]['link'][0]);
         if (item_values[key]['link'][0].includes('article')) {
           const title = item_values[key]['title'][0];
           const link = item_values[key]['link'][0];
-          // const date = item_values[key]['pubDate'][0].substr(0, item_values[key]['pubDate'][0].length - 6);
           let date = item_values[key]['pubDate'][0];
           date = this.formatTimeZone(date, 'US/Eastern');
           const author = item_values[key]['sa:author_name'][0];
-          // console.log(item_values[key]['link'][0]);
           console.log(item_values[key]['title'][0]);
-          // console.log(item_values[key]['pubDate'][0]);
-          // console.log(item_values[key]['pubDate'][0].substr(0, item_values[key]['pubDate'][0].length - 6));
-          // console.log(item_values[key]['sa:author_name'][0]);
           this.newsfeeds.push((new Newsfeed(title, link, author, date)));
           count++;
           if (count === 5) break;
-          // item_values[key]['pubDate'][0]['pubDate'].substr( 0, -6);
         }
       }
       this.news_tag = true;
@@ -220,8 +203,14 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       this.news_error_tag = true;
     });
   }
-
-  testThree(option: number, value: string, indicator: string, number: number) {
+  /*
+  * fetch chart data with three lines and export charts
+  * @param {number} option, chart option numbers
+  * @param {string} value, symbol name
+  * @param {string} indicator, indicator name
+  * @param {number} number, line number
+  * */
+  fetchThreelinedata(option: number, value: string, indicator: string, number: number) {
     console.log(option);
     this.tags[option] = false;
     this.error_tags[option] = false;
@@ -358,12 +347,6 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         };
         console.log(data_array[0]);
         this.temp_array = data_array[0];
-        // for (let i = 0 ; i < number; i++) {
-        //   this.chart.addSeries({
-        //     data: this.temp_array
-        //   }, true);
-        // }
-        // this.addPoint();
         this.tags[option] = true;
         this.error_tags[option] = false;
       },
@@ -373,8 +356,14 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         this.error_tags[option] = true;
       });
   }
-
-  testSTOCH(option: number, value: string, indicator: string, number: number) {
+  /*
+  * fetch chart data with two lines and export charts
+  * @param {number} option, chart option numbers
+  * @param {string} value, symbol name
+  * @param {string} indicator, indicator name
+  * @param {number} number, line number
+  * */
+  fetchTwolinedata(option: number, value: string, indicator: string, number: number) {
     console.log(option);
     this.tags[option] = false;
     this.error_tags[option] = false;
@@ -503,12 +492,6 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         };
         console.log(data_array[0]);
         this.temp_array = data_array[0];
-        // for (let i = 0 ; i < number; i++) {
-        //   this.chart.addSeries({
-        //     data: this.temp_array
-        //   }, true);
-        // }
-        // this.addPoint();
         this.tags[option] = true;
         this.error_tags[option] = false;
       },
@@ -518,8 +501,14 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         this.error_tags[option] = true;
       });
   }
-
-  testSMA(option: number, value: string, indicator: string, number: number) {
+  /*
+  * fetch chart data with one lines and export charts
+  * @param {number} option, chart option numbers
+  * @param {string} value, symbol name
+  * @param {string} indicator, indicator name
+  * @param {number} number, line number
+  * */
+  fetchOnelinedata(option: number, value: string, indicator: string, number: number) {
     console.log(option);
     this.tags[option] = false;
     this.error_tags[option] = false;
@@ -641,12 +630,6 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         this.temp_array = data_array[0];
         this.tags[option] = true;
         this.error_tags[option] = false;
-        // for (let i = 0 ; i < number; i++) {
-        //   this.chart.addSeries({
-        //     data: this.temp_array
-        //   }, true);
-        // }
-        // this.addPoint();
       },
       err => {
         console.log(indicator);
@@ -654,9 +637,11 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         this.error_tags[option] = true;
       });
     console.log(this.temp_array);
-    // this.addPoint();
   }
-
+  /*
+  * fetch symbol information
+  * @param {string} value, symbol name
+  * */
   test(value: string): SymbolInfo {
     if (value == null) {
       return this.symbol_info;
@@ -718,12 +703,6 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
           if (temp_date.length > 5) {
             temp_date = temp_date.substr(0, 5);
           }
-          // date.push(temp_date);
-          // price_array.push(parseFloat(array_values[key]['4. close']));
-          // volume_array.push(parseFloat(array_values[key]['5. volume']));
-          // max = Math.max(parseFloat(array_values[key]['4. close']), max);
-          // min = Math.min(parseFloat(array_values[key]['4. close']), min);
-          // volume_max = Math.max(parseFloat(array_values[key]['5. volume']), volume_max);
           timestampData.push([new Date(key).getTime(), parseFloat(array_values[key]['4. close'])]);
           if (count < 126) {
             // break;
@@ -840,10 +819,6 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
             data: volume_array
           }],
         };
-        // this.chart.series[0].setData(this.symbol_info.price_array);
-        // this.chart.series[1].setData(this.symbol_info.volume_array);
-        // this.testData.push(data[0]);
-        // console.log(this.testData);
         console.log('stock_date');
         console.log((timestampData));
         this.highStockoptions = {
@@ -921,32 +896,11 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         console.log('error');
         console.log(err);
       });
-    // console.log(exportUrl);
-    // console.log(dataString);
-    // this.http.post(exportUrl, dataString, {
-    //   responseType: 'text',
-    //   headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-    //     .append('accept', '*/*'),
-    //   // params: new HttpParams().set('options', optionsStr),
-    // }).subscribe(res => {
-    //     console.log(res);
-    //     console.log(exportUrl + res);
-    //     const options: UIParams = {
-    //       method: 'feed',
-    //       link: exportUrl + res,
-    //     };
-    //
-    //     this.fb.ui(options)
-    //       .then((res: UIResponse) => {
-    //         alert('Posted Successful!');
-    //       })
-    //       .catch(this.handleError);
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   });
   }
-
+  /*
+  * change current tag number
+  * @param {string} value, indicator name
+  * */
   changeTagNumber(value: string) {
     switch (value) {
       case 'Price': {
@@ -997,7 +951,9 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     }
   }
 
-
+  /*
+  * slide between two views
+  * */
   animateMe() {
     console.log($('#toggle-one').bootstrapToggle());
     if (this.state === 'first') {
@@ -1018,14 +974,13 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     }
     save_symbol.push(this.symbol.toUpperCase());
     this.save_symbol.push(this.symbol.toUpperCase());
-    // let save_sybol = JSON.parse(localStorage.getItem('save_sybol'));
-    // let save_sybol = [];
-    // save_sybol[0] = prompt("New member name?");
+
     localStorage.setItem('save_symbol', JSON.stringify(save_symbol));
-    // let storedNames = JSON.parse(localStorage.getItem("names"));
     console.log(this.myStorage.getItem('save_symbol'));
   }
-
+  /*
+  * join current symbol to bookmark
+  * */
   bookmark() {
     let save_datas: SaveData[];
     if (localStorage.getItem('save_datas') == null) {
@@ -1037,15 +992,13 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       parseFloat(this.symbol_info.change), parseFloat(this.symbol_info.change_per), parseInt(this.symbol_info.volume), Date.now().toString()));
     this.save_datas.push(new SaveData(this.symbol.toUpperCase(), parseFloat(this.symbol_info.close),
       parseFloat(this.symbol_info.change), parseFloat(this.symbol_info.change_per), parseInt(this.symbol_info.volume), Date.now().toString()));
-    // this.save_symbol.push(this.symbol.toUpperCase());
-    // let save_sybol = JSON.parse(localStorage.getItem('save_sybol'));
-    // let save_sybol = [];
-    // save_sybol[0] = prompt("New member name?");
     localStorage.setItem('save_datas', JSON.stringify(save_datas));
-    // let storedNames = JSON.parse(localStorage.getItem("names"));
     console.log(this.myStorage.getItem('save_datas'));
   }
-
+  /*
+  * delete current symbol from bookmark
+  * @param {string} value, symbol name
+  * */
   delete(symbol: String) {
     console.log('delete' + symbol);
     for (let key in this.save_datas) {
@@ -1059,7 +1012,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       }
     }
   }
-
+  /*
+  * click save symbol
+  * @param {string} value, symbol name
+  * */
   clickSaveSymbol(symbol: string) {
     console.log(symbol + ' ' + this.symbol);
     this.isAbleSlide = false;
@@ -1071,24 +1027,26 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       this.test(symbol);
       let timer = Observable.timer(600);
       timer.subscribe(t => {
-      this.testSMA(0, this.symbol, 'SMA', 1);
-        this.testSMA(1, this.symbol, 'EMA', 1);
-        this.testSTOCH(2, this.symbol, 'STOCH', 2);
+      this.fetchOnelinedata(0, this.symbol, 'SMA', 1);
+        this.fetchOnelinedata(1, this.symbol, 'EMA', 1);
+        this.fetchTwolinedata(2, this.symbol, 'STOCH', 2);
       });
       let timer2 = Observable.timer(300);
       timer2.subscribe(t => {
-        this.testSMA(3, this.symbol, 'RSI', 1);
-        this.testThree(6, this.symbol, 'BBANDS', 3);
-        this.testThree(7, this.symbol, 'MACD', 3);
+        this.fetchOnelinedata(3, this.symbol, 'RSI', 1);
+        this.fetchThreelinedata(6, this.symbol, 'BBANDS', 3);
+        this.fetchThreelinedata(7, this.symbol, 'MACD', 3);
       });
 
-      this.testSMA(4, this.symbol, 'ADX', 1);
-      this.testSMA(5, this.symbol, 'CCI', 1);
-      this.testNews(this.symbol);
+      this.fetchOnelinedata(4, this.symbol, 'ADX', 1);
+      this.fetchOnelinedata(5, this.symbol, 'CCI', 1);
+      this.fetchNews(this.symbol);
     }
 
   }
-
+  /*
+  * choosing sort catalog
+  * */
   chooseOrderby() {
 
     console.log('choosing:' + this.chosenOption);
@@ -1098,10 +1056,12 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       this.disableOrder = false;
     }
   }
-
+  /*
+  * choosing sort order
+  * */
   orderby(): string {
     // console.log('orderby:' + this.chosenOption);
-    this.testJquery();
+    this.bindToggle();
     switch (this.chosenOption) {
       case 'Default': {
         return 'save_time';
@@ -1123,7 +1083,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       }
     }
   }
-
+  /*
+  * adcending or decsending
+  * @return {boolean} if adcending
+  * */
   isAdcending(): boolean {
     // console.log(this.chosenOrder);
     if (this.chosenOrder === 'Adcending') {
@@ -1132,10 +1095,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       return true;
     }
   }
-  testJquery() {
-    // console.log(this.checkboxValue);
-    // console.log('testJquery' +
-    //   '');
+  /*
+* bind toggle button
+* */
+  bindToggle() {
     if (this.ifBindToggle === false) {
       console.log('ifBindToggle' + false);
       $('#toggle-one').bootstrapToggle();
@@ -1146,11 +1109,11 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     }
 
   }
-  // refresh2() {
-  //   console.log(this.save_datas);
-  // }
+  /*
+* refresh save symbol
+* */
   refresh() {
-    // this.testJquery();
+    // this.bindToggle();
     console.log('before refresh');
     console.log(this.save_datas);
     for (let i in this.save_datas) {
@@ -1163,6 +1126,9 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     console.log('after refresh');
     console.log(this.save_datas);
   }
+  /*
+* refresh save refreshData
+* */
   refreshData(index: string, url: string ) {
     this.http.get(url).subscribe( data => {
         const meta = data['Meta Data'];
@@ -1200,9 +1166,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         console.log(err);
       });
   }
-  SwitchFresh() {
-    console.log(this.checkboxValue);
-  }
+
   ngAfterViewInit() {
     this.tag_number = 9;
     $('#toggle-one').bootstrapToggle();
@@ -1210,7 +1174,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       this.toggleValueChanged(event.target.checked);
     });
   }
-
+  /*
+  * auto refresh
+  * @param {boolean} toggleValue, if permit auto refresh
+  * */
   toggleValueChanged(toggleValue: boolean) {
     this.checkboxValue = toggleValue;
 
@@ -1220,8 +1187,6 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       console.log(this.save_datas);
       this.timer = Observable.timer(0, 5000); //delay, period
       this.sub = this.timer.subscribe(t => {
-        this.ticks = t;
-        console.log(this.ticks);
         this.refresh();
         this.cdr.detectChanges();
       });
@@ -1231,24 +1196,10 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       this.sub.unsubscribe();
     }
   }
-  // toggleValueChanged(toggleValue: boolean) {
-  //   this.checkboxValue = toggleValue;
-  //
-  //   console.log('toggle changed', this.checkboxValue);
-  //   if (this.checkboxValue === true) {
-  //     console.log('toggle inner ', this.checkboxValue);
-  //     console.log(this.save_datas);
-  //     this.handle = setInterval( this.refresh, 5000);
-  //
-  //   } else {
-  //     console.log('toggle inner ', this.checkboxValue);
-  //     clearInterval(this.handle);
-  //     this.handle = 0; // I just do this so I know I've cleared the interval
-  //   }
-  // }
-  testInterval() {
-    console.log('count');
-  }
+  /*
+  * if show yellow star or not
+  * @return {boolean} toggleValue, if show yellow star or not
+  * */
   isYellowStar(): boolean {
     // console.log(this.symbol);
     for (let key in this.save_datas) {
@@ -1259,6 +1210,11 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     }
     return false;
   }
+  /*
+   * formatTimeZone
+   * @return {string} date, date from news feed data
+   * @return {string} timezone, 'US/Eastern'
+   * */
   formatTimeZone(date, timezone) {
     let comma = date.indexOf(",");
     console.log(date);
@@ -1269,7 +1225,9 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     console.log(newTime);
     return newTime;
   }
-
+  /*
+   * click clear button
+   * */
   ClickClear() {
     this.tag_number = 9;
     console.log('clearinner');

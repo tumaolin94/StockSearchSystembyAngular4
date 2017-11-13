@@ -2,7 +2,7 @@
     <!-- Carousel items -->
     <div class="carousel-inner" >
       <!--Favorite List-->
-      <div class="container" style="width: 100%; border: 1px solid #F1F1F1;padding-left: 0;padding-right: 0" [@rightToright]='state' *ngIf="left" (change)="testJquery()" (play)="testJquery()" (close)="testJquery()">
+      <div class="container" style="width: 100%; border: 1px solid #F1F1F1;padding-left: 0;padding-right: 0" [@rightToright]='state' *ngIf="left" (change)="bindToggle()" (play)="bindToggle()" (close)="bindToggle()">
         <div class="navbar navbar-default " style="background-color: #F5F5F5; margin-bottom: 0">
           <div class="container-fluid" style="background-color: #F5F5F5;height: 100%;margin-top: 1%">
             <div class="row" style="height: 100%">
