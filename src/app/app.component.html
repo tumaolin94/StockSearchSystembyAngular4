@@ -37,7 +37,7 @@
       </div>
     </form>
 
-    <mat-autocomplete #auto="matAutocomplete">
+    <mat-autocomplete #auto="matAutocomplete" style="overflow: hidden">
       <mat-option *ngFor="let data of autodatas | async" [value]="data.Symbol">
         <span>{{data.Symbol}} - {{ data.Name }} ({{data.Exchange}})</span>
       </mat-option>

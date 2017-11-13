@@ -5,10 +5,13 @@
 .symbolLabel{
   color:red;
 }
-/*.searchContainer {*/
-  /*margin-top :4%;*/
-  /*background-color: white;*/
-/*}*/
+.mat-autocomplete-panel{
+  overflow: hidden;
+}
+#mat-autocomplete-0 {
+  overflow: hidden;
+}
+
 .row {
   margin-left: -15px;margin-right: -15px;
 }

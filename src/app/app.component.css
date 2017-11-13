@@ -18,3 +18,9 @@ body {
 .form-group {
   margin-bottom: 0;
 }
+.mat-autocomplete-panel .mat-autocomplete-visible{
+  overflow: hidden;
+}
+#mat-autocomplete-0 {
+  overflow: hidden;
+}
