@@ -69,6 +69,8 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   error_tags: boolean[] = []; /* arrays of error_tags, if get data unsuccessfully*/
   price_tag: boolean; /* if get price data successfully */
   price_error_tag = false; /* if get price data unsuccessfully */
+  table_tag: boolean; /* if get symbol data successfully */
+  table_error_tag = false; /* if get symbol data unsuccessfully */
   news_tag: boolean; /* if get news data successfully */
   news_error_tag = false; /* if get news data unsuccessfully */
   symbol_info: SymbolInfo = new SymbolInfo(); /* completed symbol information*/
@@ -101,6 +103,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     }
     this.price_tag = false;
     this.news_tag = false;
+    this.table_tag =false;
     let initParams: InitParams = {
       appId: '260545224469898',
       xfbml: true,
@@ -133,7 +136,8 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     if (this.ifClear) {
       this.ClickClear();
     } else {
-      this.symbol_info = this.test(this.symbol);
+      this.test(this.symbol);
+      this.symbol_info = this.fetchSymbolTable(this.symbol);
       console.log(this.symbol_info.price_array);
       let timer = Observable.timer(600);
       timer.subscribe(t => {
@@ -171,7 +175,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     }
     value = value.toUpperCase();
     // const url = 'http://localhost:3000/news?symbol=' + value;
-    const url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/news?symbol=' + value;
+    const url = 'http://maolintustock.azurewebsites.net/news?symbol=' + value;
     console.log(url);
     this.news_tag = false;
     this.http.get(url).subscribe(data => {
@@ -218,7 +222,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       return;
     }
     value = value.toUpperCase();
-    const url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/indicator?indicator=' + indicator + '&symbol=' + value + '&number=3';
+    const url = 'http://maolintustock.azurewebsites.net/indicator?indicator=' + indicator + '&symbol=' + value + '&number=3';
     // const url = 'http://localhost:3000/test?indicator=' + indicator + '&symbol=' + value + '&number=2';
     console.log(url);
     this.http.get(url).subscribe(data => {
@@ -371,7 +375,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       return;
     }
     value = value.toUpperCase();
-    const url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/indicator?indicator=' + indicator + '&symbol=' + value + '&number=2';
+    const url = 'http://maolintustock.azurewebsites.net/indicator?indicator=' + indicator + '&symbol=' + value + '&number=2';
     // const url = 'http://localhost:3000/test?indicator=' + indicator + '&symbol=' + value + '&number=2';
     console.log(url);
     this.http.get(url).subscribe(data => {
@@ -516,7 +520,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       return;
     }
     value = value.toUpperCase();
-    const url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/indicator?indicator=' + indicator + '&symbol=' + value + '&number=1';
+    const url = 'http://maolintustock.azurewebsites.net/indicator?indicator=' + indicator + '&symbol=' + value + '&number=1';
     console.log(url);
     this.http.get(url).subscribe(data => {
         if (data == null || !data.hasOwnProperty('Meta Data')) {
@@ -642,9 +646,9 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   * fetch symbol information
   * @param {string} value, symbol name
   * */
-  test(value: string): SymbolInfo {
+  test(value: string) {
     if (value == null) {
-      return this.symbol_info;
+      return;
     }
     this.price_tag = false;
     this.price_error_tag = false;
@@ -652,7 +656,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     this.ifBindToggle = false;
     value = value.toUpperCase();
     console.log('symbol ' + value);
-    const url = `http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/symbol?symbol=` + value;
+    const url = `http://maolintustock.azurewebsites.net/symbol?symbol=` + value;
     // const url = 'http://localhost:3000/testsymbol';
     console.log(url);
     this.http.get(url).subscribe(data => {
@@ -721,19 +725,9 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         timestampData.reverse();
         low = parseFloat(low).toFixed(2);
         high = parseFloat(high).toFixed(2);
-        this.symbol_info.open = parseFloat(open).toFixed(2);
-        this.symbol_info.close = parseFloat(close).toFixed(2);
-        this.symbol_info.low = low;
-        this.symbol_info.high = high;
-        this.symbol_info.symbol = symbol;
-        this.symbol_info.timestamp = timestamp;
+
         const temp_change = (parseFloat(close) - pre_close);
-        this.symbol_info.change = temp_change.toFixed(2);
-        this.symbol_info.change_per = (temp_change / pre_close * 100).toFixed(2);
-        this.symbol_info.volume = volume;
-        this.symbol_info.new_volume = volume.replace(/\B(?=(?:\d{3})+\b)/g, ',');
-        this.symbol_info.range = low + '-' + high;
-        console.log(this.symbol_info.price_array);
+
         const charTitle = symbol + ' Stock Price and Volume';
         this.options = {
           responsive: {
@@ -825,9 +819,9 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
           chart: {
             zoomType: 'x'
           },
-          title: {text: value + 'Stock Value'},
+          title: {text: value + ' Stock Value'},
           series: [{
-            name: value + 'Stock Value',
+            name: value + ' Stock Value',
             type: 'area',
             data: timestampData,
             tooltip: {
@@ -842,6 +836,89 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
         console.log(value);
         console.log(err);
         this.price_error_tag = true;
+      });
+  }
+
+  /*
+* fetch symbol Table show information
+* @param {string} value, symbol name
+* */
+  fetchSymbolTable(value: string): SymbolInfo {
+    if (value == null) {
+      return this.symbol_info;
+    }
+    this.table_tag = false;
+    this.table_error_tag = false;
+    value = value.toUpperCase();
+    console.log('symbol ' + value);
+    const url = `http://maolintustock.azurewebsites.net/symbol?symbol=` + value;
+    // const url = 'http://localhost:3000/testsymbol';
+    console.log(url);
+    this.http.get(url).subscribe(data => {
+        // Read the result field from the JSON response.
+        console.log('fetchSymbolTable');
+        console.log(data);
+        if (data == null ||  data.hasOwnProperty('Error Message')) {
+          console.log('data error');
+          this.table_error_tag = true;
+          return;
+        }
+        const meta = data['Meta Data'];
+        console.log('meta');
+        console.log(meta);
+        const array_values = data['Time Series (Daily)'];
+        const symbol = meta['2. Symbol'];
+        let timestamp = meta['3. Last Refreshed'];
+        if ( timestamp.length < 12) {
+          timestamp = timestamp + ' 16:00:00';
+        }
+        console.log(array_values);
+        let open = '';
+        let close = '';
+        let low = '';
+        let high = '';
+        let volume = '';
+        let count = 0;
+        let pre_close = 0;
+        for (let key in array_values) {
+          // console.log(key);
+          if (count === 0) {
+            open = array_values[key]['1. open'];
+            console.log(open);
+            close = array_values[key]['4. close'];
+            low = array_values[key]['3. low'];
+            high = array_values[key]['2. high'];
+            volume = array_values[key]['5. volume'];
+          }
+          if (count === 1) {
+            pre_close = array_values[key]['4. close'];
+            break;
+          }
+          count++;
+        }
+
+        low = parseFloat(low).toFixed(2);
+        high = parseFloat(high).toFixed(2);
+        this.symbol_info.open = parseFloat(open).toFixed(2);
+        this.symbol_info.close = parseFloat(close).toFixed(2);
+        this.symbol_info.low = low;
+        this.symbol_info.high = high;
+        this.symbol_info.symbol = symbol;
+        this.symbol_info.timestamp = timestamp;
+        const temp_change = (parseFloat(close) - pre_close);
+        this.symbol_info.change = temp_change.toFixed(2);
+        this.symbol_info.change_per = (temp_change / pre_close * 100).toFixed(2);
+        this.symbol_info.volume = volume;
+        this.symbol_info.new_volume = volume.replace(/\B(?=(?:\d{3})+\b)/g, ',');
+        this.symbol_info.range = low + '-' + high;
+        console.log(this.symbol_info.price_array);
+        this.table_tag = true;
+        this.table_error_tag = false;
+      },
+      err => {
+        console.log(value);
+        console.log(err);
+        this.table_error_tag = true;
       });
     return this.symbol_info;
   }
@@ -870,14 +947,18 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
   share() {
     let dataString = '';
     if (this.tag_number === 9) {
-      dataString = encodeURI(JSON.stringify(this.options));
+      dataString = encodeURIComponent(JSON.stringify(this.options));
+      console.log( JSON.stringify(this.options));
       // dataString = encodeURI('async=false&type=jpeg&width=600&options=' + JSON.stringify(this.options));
     } else {
-      dataString = encodeURI(JSON.stringify(this.ops[this.tag_number]));
+      dataString = encodeURIComponent(JSON.stringify(this.ops[this.tag_number]));
       // dataString = encodeURI('async=false&type=jpeg&width=600&options=' + JSON.stringify(this.ops[this.tag_number]));
     }
-    const Url = 'http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/fb';
+    // const Url = 'http://localhost:3000/fb';
+    const Url = 'https://maolintustock.azurewebsites.net/fb';
     const exportUrl = 'http://export.highcharts.com/';
+
+    console.log( dataString);
     this.http.get(Url + '?options=' + dataString, { responseType: 'text'}).subscribe( data => {
             console.log(data);
             console.log(exportUrl + data);
@@ -945,7 +1026,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
 
   isFBVaild(): boolean {
     if (this.tag_number === 9) {
-      return this.price_tag;
+      return this.price_tag&&this.table_tag;
     } else {
       return this.tags[this.tag_number];
     }
@@ -1025,6 +1106,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
       this.tag_number = 9;
       this.symbol = symbol;
       this.test(symbol);
+      this.symbol_info = this.fetchSymbolTable(this.symbol);
       let timer = Observable.timer(600);
       timer.subscribe(t => {
       this.fetchOnelinedata(0, this.symbol, 'SMA', 1);
@@ -1117,7 +1199,7 @@ export class StockDetailComponent implements OnChanges, AfterViewInit {
     console.log('before refresh');
     console.log(this.save_datas);
     for (let i in this.save_datas) {
-      const url = `http://newphp-nodejs-env.rakp9pisrm.us-west-1.elasticbeanstalk.com/symbol?symbol=` + this.save_datas[i].save_name;
+      const url = `http://maolintustock.azurewebsites.net/symbol?symbol=` + this.save_datas[i].save_name;
       // const url = 'http://localhost:3000/testsymbol';
       console.log(url);
     this.refreshData(i, url);
