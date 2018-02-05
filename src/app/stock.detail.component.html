@@ -76,8 +76,8 @@
                   <td><a style="text-decoration: none;cursor:pointer" (click)="clickSaveSymbol(save_data.save_name)">{{save_data.save_name}}</a></td>
                   <td><span>{{save_data.save_price}}</span></td>
                   <!--<td >{{save_data.save_change}}({{save_data.save_change_per}})</td>-->
-                  <td *ngIf="save_data.save_change >= 0" style="color: green">{{save_data.save_change}}({{save_data.save_change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Green_Arrow_Up.png' alt='up' width='15' height='15'></td>
-                  <td *ngIf="save_data.save_change < 0" style="color: red">{{save_data.save_change}}({{save_data.save_change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Red_Arrow_Down.png' alt='up' width='15' height='15'></td>
+                  <td *ngIf="save_data.save_change >= 0" style="color: green">{{save_data.save_change}}({{save_data.save_change_per}}%) <img src='http://www-scf.usc.edu/~maolintu/resources/up.png' alt='up' width='15' height='15'></td>
+                  <td *ngIf="save_data.save_change < 0" style="color: red">{{save_data.save_change}}({{save_data.save_change_per}}%) <img src='http://www-scf.usc.edu/~maolintu/resources/down.png' alt='up' width='15' height='15'></td>
                   <td >{{save_data.save_new_volume}}</td>
                   <td ><button (click)="delete(save_data.save_name)"><i class="glyphicon glyphicon-trash"></i></button></td>
                 </tr>
@@ -143,7 +143,7 @@
                             style="width: 20px; height: 20px; margin-top:4px;color: #FDD445"  ></i>
                         </button>
                         <button [disabled]="!isFBVaild()" (click)="share()" style="background-color: white;border: 1px solid #e7e7e7;width: 35px; height: 35px; padding: 0" class="btn btn-outline-secondary" id="fb">
-                          <img src="http://cs-server.usc.edu:45678/hw/hw8/images/facebook.png"
+                          <img src="http://www-scf.usc.edu/~maolintu/resources/facebook.png"
                                style="width: 20px; height: 20px; margin-top:4px"/></button>
                       </div>
                     </div>
@@ -164,8 +164,8 @@
                       </tr>
                       <tr class="tr-chartable">
                         <th class="th-chartable">Change(Change Percent)</th>
-                        <td *ngIf="symbol_info.change >= 0" class="th-chartable"  style="color: green">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Green_Arrow_Up.png' alt='up' width='15' height='15'></td>
-                        <td *ngIf="symbol_info.change < 0" class="th-chartable"  style="color: red">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://cs-server.usc.edu:45678/hw/hw6/images/Red_Arrow_Down.png' alt='up' width='15' height='15'></td>
+                        <td *ngIf="symbol_info.change >= 0" class="th-chartable"  style="color: green">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://www-scf.usc.edu/~maolintu/resources/up.png' alt='up' width='15' height='15'></td>
+                        <td *ngIf="symbol_info.change < 0" class="th-chartable"  style="color: red">{{symbol_info.change}}({{symbol_info.change_per}}%) <img src='http://www-scf.usc.edu/~maolintu/resources/down.png' alt='up' width='15' height='15'></td>
                       </tr>
                       <tr class="tr-chartable">
                         <th class="th-chartable">Timestamp</th>
